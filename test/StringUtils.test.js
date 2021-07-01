@@ -16,8 +16,49 @@ describe('StringUtils', function () {
     ];
 
     tests.forEach(({ arg, expected }) => {
-      it(`converts address of '${arg}' to string`, async function () {
+      it(`converts address of ${arg} to string`, async function () {
         const result = await stringUtils.addressToString(arg);
+        expect(result).to.equal(expected);
+      });
+    });
+  });
+
+  describe('intToString', function () {
+    const tests = [
+      { arg: 0, expected: '0' },
+      { arg: -1, expected: '-1' },
+      { arg: 1, expected: '1' },
+      {
+        arg: '-57896044618658097711785492504343953926634992332820282019728792003956564819968',
+        expected: '-57896044618658097711785492504343953926634992332820282019728792003956564819968'
+      },
+      {
+        arg: '57896044618658097711785492504343953926634992332820282019728792003956564819967',
+        expected: '57896044618658097711785492504343953926634992332820282019728792003956564819967'
+      }
+    ];
+
+    tests.forEach(({ arg, expected }) => {
+      it(`converts int value of ${arg} to string`, async function () {
+        const result = await stringUtils.intToString(arg);
+        expect(result).to.equal(expected);
+      });
+    });
+  });
+
+  describe('uintToString', function () {
+    const tests = [
+      { arg: 0, expected: '0' },
+      { arg: 1, expected: '1' },
+      {
+        arg: '115792089237316195423570985008687907853269984665640564039457584007913129639935',
+        expected: '115792089237316195423570985008687907853269984665640564039457584007913129639935'
+      }
+    ];
+
+    tests.forEach(({ arg, expected }) => {
+      it(`converts uint value of ${arg} to string`, async function () {
+        const result = await stringUtils.uintToString(arg);
         expect(result).to.equal(expected);
       });
     });
