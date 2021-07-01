@@ -65,8 +65,7 @@ library JsonWriter {
     function writeEndArray(
         Json memory json
     ) internal pure returns (Json memory) {
-        json.value = string(abi.encodePacked(json.value, CLOSED_BRACKET));
-        return json;
+        return writeEnd(json, CLOSED_BRACKET);
     }
 
     /**
@@ -75,8 +74,7 @@ library JsonWriter {
     function writeEndObject(
         Json memory json
     ) internal pure returns (Json memory) {
-        json.value = string(abi.encodePacked(json.value, CLOSED_BRACE));
-        return json;
+        return writeEnd(json, CLOSED_BRACE);
     }
 
     /**

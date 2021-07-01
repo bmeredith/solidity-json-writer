@@ -22,6 +22,28 @@ describe('JsonWriter', function () {
 
       expect(json.value).to.equal('[]');
     });
+
+    it('creates array within an array', async function () {
+      let json = createJsonObject();
+      json = await jsonWriter.writeStartArray(json);
+      json = await jsonWriter.writeStartArray(json);
+      json = await jsonWriter.writeEndArray(json);
+      json = await jsonWriter.writeEndArray(json);
+
+      expect(json.value).to.equal('[[]]');
+    });
+
+    it('creates multiple arrays within an array', async function () {
+      let json = createJsonObject();
+      json = await jsonWriter.writeStartArray(json);
+      json = await jsonWriter.writeStartArray(json);
+      json = await jsonWriter.writeEndArray(json);
+      json = await jsonWriter.writeStartArray(json);
+      json = await jsonWriter.writeEndArray(json);
+      json = await jsonWriter.writeEndArray(json);
+
+      expect(json.value).to.equal('[[],[]]');
+    });
   });
 
   describe('objects', function () {
