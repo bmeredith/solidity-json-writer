@@ -113,7 +113,7 @@ describe('JsonWriter', function () {
         json = await jsonWriter.writeStartObject(json);
         json = await jsonWriter.writeAddressProperty(json, 'prop', '0x1111111111111111111111111111111111111111');
         json = await jsonWriter.writeEndObject(json);
-  
+
         expect(json.value).to.equal('{"prop": "0x1111111111111111111111111111111111111111"}');
       });
 
@@ -123,7 +123,7 @@ describe('JsonWriter', function () {
         json = await jsonWriter.writeAddressProperty(json, 'prop1', '0x1111111111111111111111111111111111111111');
         json = await jsonWriter.writeAddressProperty(json, 'prop2', '0x2222222222222222222222222222222222222222');
         json = await jsonWriter.writeEndObject(json);
-  
+
         expect(json.value).to.equal('{"prop1": "0x1111111111111111111111111111111111111111","prop2": "0x2222222222222222222222222222222222222222"}');
       });
     });
@@ -150,7 +150,7 @@ describe('JsonWriter', function () {
         json = await jsonWriter.writeStartArray(json);
         json = await jsonWriter.writeAddressValue(json, '0x1111111111111111111111111111111111111111');
         json = await jsonWriter.writeEndArray(json);
-  
+
         expect(json.value).to.equal('["0x1111111111111111111111111111111111111111"]');
       });
 
@@ -160,7 +160,7 @@ describe('JsonWriter', function () {
         json = await jsonWriter.writeAddressValue(json, '0x1111111111111111111111111111111111111111');
         json = await jsonWriter.writeAddressValue(json, '0x1111111111111111111111111111111111111111');
         json = await jsonWriter.writeEndArray(json);
-  
+
         expect(json.value).to.equal('["0x1111111111111111111111111111111111111111","0x1111111111111111111111111111111111111111"]');
       });
     });
@@ -265,7 +265,7 @@ describe('JsonWriter', function () {
         json = await jsonWriter.writeStartObject(json);
         json = await jsonWriter.writeIntProperty(json, 'prop', 1);
         json = await jsonWriter.writeEndObject(json);
-  
+
         expect(json.value).to.equal('{"prop": 1}');
       });
 
@@ -275,7 +275,7 @@ describe('JsonWriter', function () {
         json = await jsonWriter.writeIntProperty(json, 'prop1', -1);
         json = await jsonWriter.writeIntProperty(json, 'prop2', 1);
         json = await jsonWriter.writeEndObject(json);
-  
+
         expect(json.value).to.equal('{"prop1": -1,"prop2": 1}');
       });
     });
@@ -309,7 +309,7 @@ describe('JsonWriter', function () {
         json = await jsonWriter.writeStartArray(json);
         json = await jsonWriter.writeIntValue(json, 1);
         json = await jsonWriter.writeEndArray(json);
-  
+
         expect(json.value).to.equal('[1]');
       });
 
@@ -319,8 +319,28 @@ describe('JsonWriter', function () {
         json = await jsonWriter.writeIntValue(json, -1);
         json = await jsonWriter.writeIntValue(json, 1);
         json = await jsonWriter.writeEndArray(json);
-  
+
         expect(json.value).to.equal('[-1,1]');
+      });
+    });
+  });
+
+  describe('nulls', function () {
+    describe('properties', function () {
+      it('writes property with value of null', async function () {
+        let json = createJsonObject();
+        json = await jsonWriter.writeNullProperty(json, 'prop');
+
+        expect(json.value).to.equal('"prop": null');
+      });
+    });
+
+    describe('values', function () {
+      it('writes null value', async function () {
+        let json = createJsonObject();
+        json = await jsonWriter.writeNullValue(json);
+
+        expect(json.value).to.equal('null');
       });
     });
   });
@@ -349,7 +369,7 @@ describe('JsonWriter', function () {
         json = await jsonWriter.writeStartObject(json);
         json = await jsonWriter.writeStringProperty(json, 'prop', 'value');
         json = await jsonWriter.writeEndObject(json);
-  
+
         expect(json.value).to.equal('{"prop": "value"}');
       });
 
@@ -359,7 +379,7 @@ describe('JsonWriter', function () {
         json = await jsonWriter.writeStringProperty(json, 'prop1', 'value1');
         json = await jsonWriter.writeStringProperty(json, 'prop2', 'value2');
         json = await jsonWriter.writeEndObject(json);
-  
+
         expect(json.value).to.equal('{"prop1": "value1","prop2": "value2"}');
       });
     });
@@ -387,7 +407,7 @@ describe('JsonWriter', function () {
         json = await jsonWriter.writeStartArray(json);
         json = await jsonWriter.writeStringValue(json, 'test');
         json = await jsonWriter.writeEndArray(json);
-  
+
         expect(json.value).to.equal('["test"]');
       });
 
@@ -397,7 +417,7 @@ describe('JsonWriter', function () {
         json = await jsonWriter.writeStringValue(json, 'test');
         json = await jsonWriter.writeStringValue(json, 'test');
         json = await jsonWriter.writeEndArray(json);
-  
+
         expect(json.value).to.equal('["test","test"]');
       });
     });
@@ -428,7 +448,7 @@ describe('JsonWriter', function () {
         json = await jsonWriter.writeStartObject(json);
         json = await jsonWriter.writeUintProperty(json, 'prop', 1);
         json = await jsonWriter.writeEndObject(json);
-  
+
         expect(json.value).to.equal('{"prop": 1}');
       });
 
@@ -438,7 +458,7 @@ describe('JsonWriter', function () {
         json = await jsonWriter.writeUintProperty(json, 'prop1', 1);
         json = await jsonWriter.writeUintProperty(json, 'prop2', 2);
         json = await jsonWriter.writeEndObject(json);
-  
+
         expect(json.value).to.equal('{"prop1": 1,"prop2": 2}');
       });
     });
@@ -467,7 +487,7 @@ describe('JsonWriter', function () {
         json = await jsonWriter.writeStartArray(json);
         json = await jsonWriter.writeUintValue(json, 1);
         json = await jsonWriter.writeEndArray(json);
-  
+
         expect(json.value).to.equal('[1]');
       });
 
@@ -477,7 +497,7 @@ describe('JsonWriter', function () {
         json = await jsonWriter.writeUintValue(json, 1);
         json = await jsonWriter.writeUintValue(json, 2);
         json = await jsonWriter.writeEndArray(json);
-  
+
         expect(json.value).to.equal('[1,2]');
       });
     });

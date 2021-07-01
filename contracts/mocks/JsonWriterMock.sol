@@ -93,6 +93,21 @@ contract JsonWriterMock {
         return JsonWriter.writeIntValue(json, value);
     }
 
+    function writeNullProperty(
+        JsonWriter.Json memory json,
+        string memory propertyName
+    ) public pure returns (JsonWriter.Json memory) {
+        return JsonWriter.writeNullProperty(json, propertyName);
+    }
+
+    function writeNullValue(JsonWriter.Json memory json)
+        public
+        pure
+        returns (JsonWriter.Json memory)
+    {
+        return JsonWriter.writeNullValue(json);
+    }
+
     function writeStringProperty(
         JsonWriter.Json memory json,
         string memory propertyName,

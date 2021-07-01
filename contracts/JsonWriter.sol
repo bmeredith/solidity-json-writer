@@ -264,6 +264,40 @@ library JsonWriter {
         return json;
     }
 
+    function writeNullProperty(Json memory json, string memory propertyName)
+        internal
+        pure
+        returns (Json memory)
+    {
+        if (json.depthBitTracker < 0) {
+            json.value = appendListSeparator(json);
+        }
+
+        json.value = json.value.strConcat(
+            '"',
+            propertyName,
+            '": null'
+        );
+        json.depthBitTracker = setListSeparatorFlag(json);
+
+        return json;
+    }
+
+    function writeNullValue(Json memory json)
+        internal
+        pure
+        returns (Json memory)
+    {
+        if (json.depthBitTracker < 0) {
+            json.value = appendListSeparator(json);
+        }
+
+        json.value = json.value.strConcat("null");
+        json.depthBitTracker = setListSeparatorFlag(json);
+
+        return json;
+    }
+
     /**
      * @dev Writes the string text value (as a JSON string) as an element of a JSON array.
      */
