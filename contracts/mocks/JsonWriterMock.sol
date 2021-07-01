@@ -14,6 +14,13 @@ contract JsonWriterMock {
         return JsonWriter.writeStartArray(json);
     }
 
+    function writeStartArrayProperty(
+        JsonWriter.Json memory json,
+        string memory propertyName
+    ) public pure returns (JsonWriter.Json memory) {
+        return JsonWriter.writeStartArray(json, propertyName);
+    }
+
     function writeStartObject(JsonWriter.Json memory json)
         public
         pure

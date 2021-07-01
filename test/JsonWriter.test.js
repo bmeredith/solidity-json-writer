@@ -44,6 +44,28 @@ describe('JsonWriter', function () {
 
       expect(json.value).to.equal('[[],[]]');
     });
+
+    it('creates array with a nested object', async function () {
+      let json = createJsonObject();
+      json = await jsonWriter.writeStartArray(json);
+      json = await jsonWriter.writeStartObject(json);
+      json = await jsonWriter.writeEndObject(json);
+      json = await jsonWriter.writeEndArray(json);
+
+      expect(json.value).to.equal('[{}]');
+    });
+
+    it('creates array with multiple nested objects', async function () {
+      let json = createJsonObject();
+      json = await jsonWriter.writeStartArray(json);
+      json = await jsonWriter.writeStartObject(json);
+      json = await jsonWriter.writeEndObject(json);
+      json = await jsonWriter.writeStartObject(json);
+      json = await jsonWriter.writeEndObject(json);
+      json = await jsonWriter.writeEndArray(json);
+
+      expect(json.value).to.equal('[{},{}]');
+    });
   });
 
   describe('objects', function () {
@@ -53,6 +75,16 @@ describe('JsonWriter', function () {
       json = await jsonWriter.writeEndObject(json);
 
       expect(json.value).to.equal('{}');
+    });
+
+    it('creates object with an array property', async function () {
+      let json = createJsonObject();
+      json = await jsonWriter.writeStartObject(json);
+      json = await jsonWriter.writeStartArrayProperty(json, 'prop');
+      json = await jsonWriter.writeEndArray(json);
+      json = await jsonWriter.writeEndObject(json);
+
+      expect(json.value).to.equal('{"prop": []}');
     });
   });
 
