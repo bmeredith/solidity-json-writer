@@ -23,6 +23,10 @@ contract JsonWriterMock {
         return JsonWriter.writeEndObject(json);
     }
 
+    function writeAddressProperty(JsonWriter.Json memory json, string memory propertyName, address value) public pure returns (JsonWriter.Json memory) {
+        return JsonWriter.writeAddressProperty(json, propertyName, value);
+    }
+
     function writeAddressValue(JsonWriter.Json memory json, address value) public pure returns (JsonWriter.Json memory) {
         return JsonWriter.writeAddressValue(json, value);
     }

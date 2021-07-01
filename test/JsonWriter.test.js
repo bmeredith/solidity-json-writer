@@ -47,11 +47,30 @@ describe('JsonWriter', function () {
         it(`writes address property of ${arg}`, async function () {
           let json = createJsonObject();
           json = await jsonWriter.writeStartObject(json);
-          json = await jsonWriter.writeStringProperty(json, 'prop', arg);
+          json = await jsonWriter.writeAddressProperty(json, 'prop', arg);
           json = await jsonWriter.writeEndObject(json);
 
           expect(json.value).to.equal(expected);
         });
+      });
+
+      it('creates object with a single property and value', async function () {
+        let json = createJsonObject();
+        json = await jsonWriter.writeStartObject(json);
+        json = await jsonWriter.writeAddressProperty(json, 'prop', '0x1111111111111111111111111111111111111111');
+        json = await jsonWriter.writeEndObject(json);
+  
+        expect(json.value).to.equal('{"prop": "0x1111111111111111111111111111111111111111"}');
+      });
+
+      it('creates object with multiple properties and values', async function () {
+        let json = createJsonObject();
+        json = await jsonWriter.writeStartObject(json);
+        json = await jsonWriter.writeAddressProperty(json, 'prop1', '0x1111111111111111111111111111111111111111');
+        json = await jsonWriter.writeAddressProperty(json, 'prop2', '0x2222222222222222222222222222222222222222');
+        json = await jsonWriter.writeEndObject(json);
+  
+        expect(json.value).to.equal('{"prop1": "0x1111111111111111111111111111111111111111","prop2": "0x2222222222222222222222222222222222222222"}');
       });
     });
 
@@ -66,7 +85,7 @@ describe('JsonWriter', function () {
       tests.forEach(({ arg, expected }) => {
         it(`writes address value of ${arg}`, async function () {
           let json = createJsonObject();
-          json = await jsonWriter.writeStringValue(json, arg);
+          json = await jsonWriter.writeAddressValue(json, arg);
 
           expect(json.value).to.equal(expected);
         });
@@ -94,6 +113,7 @@ describe('JsonWriter', function () {
   });
 
   describe('booleans', function () {
+
     it('writes boolean property of \'true\'', async function () {
       let json = createJsonObject();
       json = await jsonWriter.writeBooleanProperty(json, 'prop', true);
@@ -140,6 +160,25 @@ describe('JsonWriter', function () {
 
       expect(json.value).to.equal('[true,true]');
     });
+
+    it('creates object with a single property and value', async function () {
+      let json = createJsonObject();
+      json = await jsonWriter.writeStartObject(json);
+      json = await jsonWriter.writeBooleanProperty(json, 'prop', true);
+      json = await jsonWriter.writeEndObject(json);
+
+      expect(json.value).to.equal('{"prop": true}');
+    });
+
+    it('creates object with multiple properties and values', async function () {
+      let json = createJsonObject();
+      json = await jsonWriter.writeStartObject(json);
+      json = await jsonWriter.writeBooleanProperty(json, 'prop1', true);
+      json = await jsonWriter.writeBooleanProperty(json, 'prop2', true);
+      json = await jsonWriter.writeEndObject(json);
+
+      expect(json.value).to.equal('{"prop1": true,"prop2": true}');
+    });
   });
 
   describe('ints', function () {
@@ -165,6 +204,25 @@ describe('JsonWriter', function () {
 
           expect(json.value).to.equal(expected);
         });
+      });
+
+      it('creates object with a single property and value', async function () {
+        let json = createJsonObject();
+        json = await jsonWriter.writeStartObject(json);
+        json = await jsonWriter.writeIntProperty(json, 'prop', 1);
+        json = await jsonWriter.writeEndObject(json);
+  
+        expect(json.value).to.equal('{"prop": 1}');
+      });
+
+      it('creates object with multiple properties and values', async function () {
+        let json = createJsonObject();
+        json = await jsonWriter.writeStartObject(json);
+        json = await jsonWriter.writeIntProperty(json, 'prop1', -1);
+        json = await jsonWriter.writeIntProperty(json, 'prop2', 1);
+        json = await jsonWriter.writeEndObject(json);
+  
+        expect(json.value).to.equal('{"prop1": -1,"prop2": 1}');
       });
     });
 
@@ -231,6 +289,25 @@ describe('JsonWriter', function () {
           expect(json.value).to.equal(expected);
         });
       });
+
+      it('creates object with a single property and value', async function () {
+        let json = createJsonObject();
+        json = await jsonWriter.writeStartObject(json);
+        json = await jsonWriter.writeStringProperty(json, 'prop', 'value');
+        json = await jsonWriter.writeEndObject(json);
+  
+        expect(json.value).to.equal('{"prop": "value"}');
+      });
+
+      it('creates object with multiple properties and values', async function () {
+        let json = createJsonObject();
+        json = await jsonWriter.writeStartObject(json);
+        json = await jsonWriter.writeStringProperty(json, 'prop1', 'value1');
+        json = await jsonWriter.writeStringProperty(json, 'prop2', 'value2');
+        json = await jsonWriter.writeEndObject(json);
+  
+        expect(json.value).to.equal('{"prop1": "value1","prop2": "value2"}');
+      });
     });
 
     describe('values', function () {
@@ -290,6 +367,25 @@ describe('JsonWriter', function () {
 
           expect(json.value).to.equal(expected);
         });
+      });
+
+      it('creates object with a single property and value', async function () {
+        let json = createJsonObject();
+        json = await jsonWriter.writeStartObject(json);
+        json = await jsonWriter.writeUintProperty(json, 'prop', 1);
+        json = await jsonWriter.writeEndObject(json);
+  
+        expect(json.value).to.equal('{"prop": 1}');
+      });
+
+      it('creates object with multiple properties and values', async function () {
+        let json = createJsonObject();
+        json = await jsonWriter.writeStartObject(json);
+        json = await jsonWriter.writeUintProperty(json, 'prop1', 1);
+        json = await jsonWriter.writeUintProperty(json, 'prop2', 2);
+        json = await jsonWriter.writeEndObject(json);
+  
+        expect(json.value).to.equal('{"prop1": 1,"prop2": 2}');
       });
     });
 
