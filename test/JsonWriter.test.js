@@ -333,6 +333,25 @@ describe('JsonWriter', function () {
 
         expect(json.value).to.equal('"prop": null');
       });
+
+      it('creates object with a single property and value', async function () {
+        let json = createJsonObject();
+        json = await jsonWriter.writeStartObject(json);
+        json = await jsonWriter.writeNullProperty(json, 'prop');
+        json = await jsonWriter.writeEndObject(json);
+
+        expect(json.value).to.equal('{"prop": null}');
+      });
+
+      it('creates object with multiple properties and values', async function () {
+        let json = createJsonObject();
+        json = await jsonWriter.writeStartObject(json);
+        json = await jsonWriter.writeNullProperty(json, 'prop1');
+        json = await jsonWriter.writeNullProperty(json, 'prop2');
+        json = await jsonWriter.writeEndObject(json);
+
+        expect(json.value).to.equal('{"prop1": null,"prop2": null}');
+      });
     });
 
     describe('values', function () {
@@ -341,6 +360,25 @@ describe('JsonWriter', function () {
         json = await jsonWriter.writeNullValue(json);
 
         expect(json.value).to.equal('null');
+      });
+
+      it('creates array with a single value', async function () {
+        let json = createJsonObject();
+        json = await jsonWriter.writeStartArray(json);
+        json = await jsonWriter.writeNullValue(json);
+        json = await jsonWriter.writeEndArray(json);
+
+        expect(json.value).to.equal('[null]');
+      });
+
+      it('creates array with multiple values', async function () {
+        let json = createJsonObject();
+        json = await jsonWriter.writeStartArray(json);
+        json = await jsonWriter.writeNullValue(json);
+        json = await jsonWriter.writeNullValue(json);
+        json = await jsonWriter.writeEndArray(json);
+
+        expect(json.value).to.equal('[null,null]');
       });
     });
   });
