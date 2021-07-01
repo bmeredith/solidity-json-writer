@@ -71,6 +71,25 @@ describe('JsonWriter', function () {
           expect(json.value).to.equal(expected);
         });
       });
+
+      it('creates array with a single value', async function () {
+        let json = createJsonObject();
+        json = await jsonWriter.writeStartArray(json);
+        json = await jsonWriter.writeAddressValue(json, '0x1111111111111111111111111111111111111111');
+        json = await jsonWriter.writeEndArray(json);
+  
+        expect(json.value).to.equal('["0x1111111111111111111111111111111111111111"]');
+      });
+
+      it('creates array with multiple values', async function () {
+        let json = createJsonObject();
+        json = await jsonWriter.writeStartArray(json);
+        json = await jsonWriter.writeAddressValue(json, '0x1111111111111111111111111111111111111111');
+        json = await jsonWriter.writeAddressValue(json, '0x1111111111111111111111111111111111111111');
+        json = await jsonWriter.writeEndArray(json);
+  
+        expect(json.value).to.equal('["0x1111111111111111111111111111111111111111","0x1111111111111111111111111111111111111111"]');
+      });
     });
   });
 
@@ -101,6 +120,25 @@ describe('JsonWriter', function () {
       json = await jsonWriter.writeBooleanValue(json, false);
 
       expect(json.value).to.equal('false');
+    });
+
+    it('creates array with a single value', async function () {
+      let json = createJsonObject();
+      json = await jsonWriter.writeStartArray(json);
+      json = await jsonWriter.writeBooleanValue(json, true);
+      json = await jsonWriter.writeEndArray(json);
+
+      expect(json.value).to.equal('[true]');
+    });
+
+    it('creates array with multiple values', async function () {
+      let json = createJsonObject();
+      json = await jsonWriter.writeStartArray(json);
+      json = await jsonWriter.writeBooleanValue(json, true);
+      json = await jsonWriter.writeBooleanValue(json, true);
+      json = await jsonWriter.writeEndArray(json);
+
+      expect(json.value).to.equal('[true,true]');
     });
   });
 
@@ -153,6 +191,25 @@ describe('JsonWriter', function () {
           expect(json.value).to.equal(expected);
         });
       });
+
+      it('creates array with a single value', async function () {
+        let json = createJsonObject();
+        json = await jsonWriter.writeStartArray(json);
+        json = await jsonWriter.writeIntValue(json, 1);
+        json = await jsonWriter.writeEndArray(json);
+  
+        expect(json.value).to.equal('[1]');
+      });
+
+      it('creates array with multiple values', async function () {
+        let json = createJsonObject();
+        json = await jsonWriter.writeStartArray(json);
+        json = await jsonWriter.writeIntValue(json, -1);
+        json = await jsonWriter.writeIntValue(json, 1);
+        json = await jsonWriter.writeEndArray(json);
+  
+        expect(json.value).to.equal('[-1,1]');
+      });
     });
   });
 
@@ -193,6 +250,25 @@ describe('JsonWriter', function () {
           expect(json.value).to.equal(expected);
         });
       });
+
+      it('creates array with a single value', async function () {
+        let json = createJsonObject();
+        json = await jsonWriter.writeStartArray(json);
+        json = await jsonWriter.writeStringValue(json, 'test');
+        json = await jsonWriter.writeEndArray(json);
+  
+        expect(json.value).to.equal('["test"]');
+      });
+
+      it('creates array with multiple values', async function () {
+        let json = createJsonObject();
+        json = await jsonWriter.writeStartArray(json);
+        json = await jsonWriter.writeStringValue(json, 'test');
+        json = await jsonWriter.writeStringValue(json, 'test');
+        json = await jsonWriter.writeEndArray(json);
+  
+        expect(json.value).to.equal('["test","test"]');
+      });
     });
   });
 
@@ -206,12 +282,12 @@ describe('JsonWriter', function () {
           expected: '"prop": 115792089237316195423570985008687907853269984665640564039457584007913129639935'
         }
       ];
-  
+
       tests.forEach(({ arg, expected }) => {
         it(`writes uint property of ${arg}`, async function () {
           let json = createJsonObject();
           json = await jsonWriter.writeUintProperty(json, 'prop', arg);
-  
+
           expect(json.value).to.equal(expected);
         });
       });
@@ -226,14 +302,33 @@ describe('JsonWriter', function () {
           expected: '115792089237316195423570985008687907853269984665640564039457584007913129639935'
         }
       ];
-  
+
       tests.forEach(({ arg, expected }) => {
         it(`writes uint value of ${arg}`, async function () {
           let json = createJsonObject();
           json = await jsonWriter.writeUintValue(json, arg);
-  
+
           expect(json.value).to.equal(expected);
         });
+      });
+
+      it('creates array with a single value', async function () {
+        let json = createJsonObject();
+        json = await jsonWriter.writeStartArray(json);
+        json = await jsonWriter.writeUintValue(json, 1);
+        json = await jsonWriter.writeEndArray(json);
+  
+        expect(json.value).to.equal('[1]');
+      });
+
+      it('creates array with multiple values', async function () {
+        let json = createJsonObject();
+        json = await jsonWriter.writeStartArray(json);
+        json = await jsonWriter.writeUintValue(json, 1);
+        json = await jsonWriter.writeUintValue(json, 2);
+        json = await jsonWriter.writeEndArray(json);
+  
+        expect(json.value).to.equal('[1,2]');
       });
     });
   });
