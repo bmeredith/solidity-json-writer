@@ -39,7 +39,8 @@ describe('JsonWriter', function () {
       const tests = [
         { arg: '0x0000000000000000000000000000000000000000', expected: '{"prop": "0x0000000000000000000000000000000000000000"}' },
         { arg: '0x1111111111111111111111111111111111111111', expected: '{"prop": "0x1111111111111111111111111111111111111111"}' },
-        { arg: '0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF', expected: '{"prop": "0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"}' }
+        { arg: '0x6b175474e89094c44da98b954eedeac495271d0f', expected: '{"prop": "0x6b175474e89094c44da98b954eedeac495271d0f"}' },
+        { arg: '0xffffffffffffffffffffffffffffffffffffffff', expected: '{"prop": "0xffffffffffffffffffffffffffffffffffffffff"}' }
       ];
 
       tests.forEach(({ arg, expected }) => {
@@ -58,7 +59,8 @@ describe('JsonWriter', function () {
       const tests = [
         { arg: '0x0000000000000000000000000000000000000000', expected: '"0x0000000000000000000000000000000000000000"' },
         { arg: '0x1111111111111111111111111111111111111111', expected: '"0x1111111111111111111111111111111111111111"' },
-        { arg: '0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF', expected: '"0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"' }
+        { arg: '0x6b175474e89094c44da98b954eedeac495271d0f', expected: '"0x6b175474e89094c44da98b954eedeac495271d0f"' },
+        { arg: '0xffffffffffffffffffffffffffffffffffffffff', expected: '"0xffffffffffffffffffffffffffffffffffffffff"' }
       ];
 
       tests.forEach(({ arg, expected }) => {
