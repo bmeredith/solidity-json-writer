@@ -3,6 +3,9 @@ pragma solidity ^0.8.0;
 
 library StringUtils {
 
+    /**
+     * @dev Converts an address to a string.
+     */
     function addressToString(address _address) internal pure returns (string memory) {
         bytes32 value = bytes32(uint256(uint160(_address)));
         bytes memory alphabet = "0123456789abcdef";
@@ -18,6 +21,9 @@ library StringUtils {
         return string(str);
     }
 
+    /**
+     * @dev Converts an int to a string.
+     */
     function intToString(int i) internal pure returns (string memory) {
         if (i == 0) { 
             return "0";
@@ -56,6 +62,9 @@ library StringUtils {
         return string(bstr);
     }
 
+    /**
+     * @dev Converts a uint to a string.
+     */
     function uintToString(uint _i) internal pure returns (string memory) {
         if (_i == 0) {
             return "0";
@@ -81,22 +90,37 @@ library StringUtils {
         return string(bstr);
     }
     
+    /**
+     * @dev Concatenates 6 strings together.
+     */
     function strConcat(string memory a, string memory b, string memory c, string memory d, string memory e, string memory f) internal pure returns (string memory) {
         return string(abi.encodePacked(a, b, c, d, e, f));
     }
     
+    /**
+     * @dev Concatenates 5 strings together.
+     */
     function strConcat(string memory a, string memory b, string memory c, string memory d, string memory e) internal pure returns (string memory) {
         return string(abi.encodePacked(a, b, c, d, e));
     }
     
+    /**
+     * @dev Concatenates 4 strings together.
+     */
     function strConcat(string memory a, string memory b, string memory c, string memory d) internal pure returns (string memory) {
         return string(abi.encodePacked(a, b, c, d));
     }
     
+    /**
+     * @dev Concatenates 3 strings together.
+     */
     function strConcat(string memory a, string memory b, string memory c) internal pure returns (string memory) {
         return string(abi.encodePacked(a, b, c));
     }
     
+    /**
+     * @dev Concatenates 2 strings together.
+     */
     function strConcat(string memory a, string memory b) internal pure returns (string memory) {
         return string(abi.encodePacked(a, b));
     }
