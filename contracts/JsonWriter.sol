@@ -224,46 +224,8 @@ library JsonWriter {
     }
 
     /**
-     * @dev Writes the property name and uint value (as a JSON number) as part of a name/value pair of a JSON object.
+     * @dev Writes the property name and value of null as part of a name/value pair of a JSON object.
      */
-    function writeUintProperty(
-        Json memory json,
-        string memory propertyName,
-        uint256 value
-    ) internal pure returns (Json memory) {
-        if (json.depthBitTracker < 0) {
-            json.value = appendListSeparator(json);
-        }
-
-        json.value = json.value.strConcat(
-            '"',
-            propertyName,
-            '": ',
-            StringUtils.uintToString(value)
-        );
-        json.depthBitTracker = setListSeparatorFlag(json);
-
-        return json;
-    }
-
-    /**
-     * @dev Writes the uint value (as a JSON number) as an element of a JSON array.
-     */
-    function writeUintValue(Json memory json, uint256 value)
-        internal
-        pure
-        returns (Json memory)
-    {
-        if (json.depthBitTracker < 0) {
-            json.value = appendListSeparator(json);
-        }
-
-        json.value = json.value.strConcat(StringUtils.uintToString(value));
-        json.depthBitTracker = setListSeparatorFlag(json);
-
-        return json;
-    }
-
     function writeNullProperty(Json memory json, string memory propertyName)
         internal
         pure
@@ -283,6 +245,9 @@ library JsonWriter {
         return json;
     }
 
+    /**
+     * @dev Writes the value of null as an element of a JSON array.
+     */
     function writeNullValue(Json memory json)
         internal
         pure
@@ -335,6 +300,47 @@ library JsonWriter {
         }
 
         json.value = json.value.strConcat('"', value, '"');
+        json.depthBitTracker = setListSeparatorFlag(json);
+
+        return json;
+    }
+
+    /**
+     * @dev Writes the property name and uint value (as a JSON number) as part of a name/value pair of a JSON object.
+     */
+    function writeUintProperty(
+        Json memory json,
+        string memory propertyName,
+        uint256 value
+    ) internal pure returns (Json memory) {
+        if (json.depthBitTracker < 0) {
+            json.value = appendListSeparator(json);
+        }
+
+        json.value = json.value.strConcat(
+            '"',
+            propertyName,
+            '": ',
+            StringUtils.uintToString(value)
+        );
+        json.depthBitTracker = setListSeparatorFlag(json);
+
+        return json;
+    }
+
+    /**
+     * @dev Writes the uint value (as a JSON number) as an element of a JSON array.
+     */
+    function writeUintValue(Json memory json, uint256 value)
+        internal
+        pure
+        returns (Json memory)
+    {
+        if (json.depthBitTracker < 0) {
+            json.value = appendListSeparator(json);
+        }
+
+        json.value = json.value.strConcat(StringUtils.uintToString(value));
         json.depthBitTracker = setListSeparatorFlag(json);
 
         return json;
