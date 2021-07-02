@@ -29,6 +29,8 @@ contract ExampleContract {
     using JsonWriter for JsonWriter.Json;
 
     function generateJSON() external pure returns (string memory) {
+    	JsonWriter.Json memory writer;
+    
         writer = writer.writeStartObject();
         writer = writer.writeStringProperty("Product", "PC");
         writer = writer.writeUintProperty("YearsOld", 5);
