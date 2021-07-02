@@ -29,7 +29,9 @@ contract ExampleContract {
     
     using JsonWriter for JsonWriter.Json;
 
-    function generateJSON() {
+    function generateJSON() external pure returns (string memory) {
+        JsonWriter.Json memory writer;
+
         writer = writer.writeStartObject();
         writer = writer.writeStringProperty("Product", "PC");
         writer = writer.writeUintProperty("YearsOld", 5);
@@ -40,6 +42,8 @@ contract ExampleContract {
         writer = writer.writeStringValue("2 terabyte hard drive");
         writer = writer.writeEndArray();
         writer = writer.writeEndObject();
+
+        return writer.value;
     }
 }
 ```
@@ -49,9 +53,9 @@ Output:
 {"Years old": 5,"Lowest temp": -30,"CPU": "Intel","CPU": "Intel","Drives": ["500 gigabyte SSD","2 terabyte hard drive"]}
 ```
 
-In order to optimize gas, the JSON outputted is not pretty-printed. 
+Note: In order to optimize gas, the JSON generated within the smart contract is not pretty-printed. 
 
-Here is the resulting JSON, but pretty-printed:
+Pretty-printed output:
 ```
 {
     "Years old": 5,
