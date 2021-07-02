@@ -28,7 +28,7 @@ contract ExampleContract {
     
     using JsonWriter for JsonWriter.Json;
 
-    function generateJSON() {
+    function generateJSON() external pure returns (string memory) {
         writer = writer.writeStartObject();
         writer = writer.writeStringProperty("Product", "PC");
         writer = writer.writeUintProperty("YearsOld", 5);
@@ -39,6 +39,8 @@ contract ExampleContract {
         writer = writer.writeStringValue("2 terabyte hard drive");
         writer = writer.writeEndArray();
         writer = writer.writeEndObject();
+	
+	return writer.value;
     }
 }
 ```
