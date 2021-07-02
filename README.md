@@ -46,7 +46,12 @@ contract ExampleContract {
 Output:
 ```
 {"Years old": 5,"Lowest temp": -30,"CPU": "Intel","CPU": "Intel","Drives": ["500 gigabyte SSD","2 terabyte hard drive"]}
+```
 
+In order to optimize gas, the JSON outputted is not pretty-printed. 
+
+Here is the resulting JSON, but pretty-printed:.
+```
 {
     "Years old": 5,
     "Lowest temp": -30,
