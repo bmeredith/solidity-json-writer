@@ -1,4 +1,4 @@
-# JSON Writer
+# Solidity JSON Writer
 
 [![npm version][npm-version-src]][npm-version-href]
 [![status][github-actions-src]][github-actions-href]
