@@ -1,6 +1,7 @@
 # JSON Writer
 
 [![npm version][npm-version-src]][npm-version-href]
+[![status][github-actions-src]][github-actions-href]
 
 **A library to aid in the generation and construction of JSON for smart contract development.**
 
@@ -28,9 +29,7 @@ contract ExampleContract {
     
     using JsonWriter for JsonWriter.Json;
 
-    function generateJSON() external pure returns (string memory) {
-    	JsonWriter.Json memory writer;
-    
+    function generateJSON() {
         writer = writer.writeStartObject();
         writer = writer.writeStringProperty("Product", "PC");
         writer = writer.writeUintProperty("YearsOld", 5);
@@ -41,8 +40,6 @@ contract ExampleContract {
         writer = writer.writeStringValue("2 terabyte hard drive");
         writer = writer.writeEndArray();
         writer = writer.writeEndObject();
-	
-	return writer.value;
     }
 }
 ```
@@ -54,7 +51,7 @@ Output:
 
 In order to optimize gas, the JSON outputted is not pretty-printed. 
 
-Here is the resulting JSON, but pretty-printed:.
+Here is the resulting JSON, but pretty-printed:
 ```
 {
     "Years old": 5,
@@ -62,9 +59,9 @@ Here is the resulting JSON, but pretty-printed:.
     "CPU": "Intel",
     "CPU": "Intel",
     "Drives": [
-		"500 gigabyte SSD", 
-		"2 terabyte hard drive"
-	]
+	"500 gigabyte SSD", 
+	"2 terabyte hard drive"
+    ]
 }
 ```
 
@@ -88,3 +85,6 @@ JsonWriter is released under the [MIT License](LICENSE).
 
 [npm-downloads-src]: https://img.shields.io/npm/dm/solidity-json-writer?style=flat-square
 [npm-downloads-href]: https://npmjs.com/package/solidity-json-writer
+
+[github-actions-src]: https://img.shields.io/github/workflow/status/bmeredith/solidity-json-writer/solidity-json-writer%20CI
+[github-actions-href]: https://github.com/bmeredith/solidity-json-writer/actions?query=workflow%3Aci
