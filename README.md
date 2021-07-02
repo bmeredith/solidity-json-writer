@@ -76,7 +76,7 @@ JsonWriter supports the following Solidity primitives:
 * `string`
 * `uint`
 
-Note: although the concept of `null` does not exist within Solidity, JsonWriter is capable of generating properties and values of `null`.
+Although the concept of `null` does not exist within Solidity, JsonWriter is capable of generating properties and values of `null`.
 
 The full API documentation for JsonWriter can be found in the [docs](docs/JsonWriter.md).
 
