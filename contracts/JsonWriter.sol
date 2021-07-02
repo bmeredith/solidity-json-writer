@@ -426,27 +426,60 @@ library JsonWriter {
         returns (string memory str)
     {
         bytes memory b = bytes(value);
-        for (uint256 i; i < b.length; i += 1) {
-            string memory currentChar = string(abi.encodePacked(b[i]));
+        bytes1[] memory escapedChars = new bytes1[](b.length);
+        bool foundEscapedChars;
 
+        for (uint256 i; i < b.length; i += 1) {
             if (b[i] == BACKSLASH) {
-                str = str.strConcat('\\', currentChar);
+                escapedChars[i] = BACKSLASH;
+                foundEscapedChars = true;
             } else if (b[i] == DOUBLE_QUOTE) {
-                str = str.strConcat('\\', currentChar);
+                escapedChars[i] = DOUBLE_QUOTE;
+                foundEscapedChars = true;
             } else if (b[i] == FRONTSLASH) {
-                str = str.strConcat('\\', currentChar);
+                escapedChars[i] = FRONTSLASH;
+                foundEscapedChars = true;
             } else if (b[i] == HORIZONTAL_TAB) {
-                str = str.strConcat('\\t');
+                escapedChars[i] = HORIZONTAL_TAB;
+                foundEscapedChars = true;
             } else if (b[i] == FORM_FEED) {
-                str = str.strConcat('\\f');
+                escapedChars[i] = FORM_FEED;
+                foundEscapedChars = true;
             } else if (b[i] == NEWLINE) {
-                str = str.strConcat('\\n');
+                escapedChars[i] = NEWLINE;
+                foundEscapedChars = true;
             } else if (b[i] == CARRIAGE_RETURN) {
-                str = str.strConcat('\\r');
+                escapedChars[i] = CARRIAGE_RETURN;
+                foundEscapedChars = true;
             } else if (b[i] == BACKSPACE) {
-                str = str.strConcat('\\b');
+                escapedChars[i] = BACKSPACE;
+                foundEscapedChars = true;
+            }
+        }
+
+        if (!foundEscapedChars) {
+            return value;
+        }
+
+        for (uint256 i; i < b.length; i += 1) {
+            if (escapedChars[i] == BACKSLASH) {
+                str = str.strConcat("\\\\");
+            } else if (escapedChars[i] == DOUBLE_QUOTE) {
+                str = str.strConcat('\\"');
+            } else if (escapedChars[i] == FRONTSLASH) {
+                str = str.strConcat("\\/");
+            } else if (escapedChars[i] == HORIZONTAL_TAB) {
+                str = str.strConcat("\\t");
+            } else if (escapedChars[i] == FORM_FEED) {
+                str = str.strConcat("\\f");
+            } else if (escapedChars[i] == NEWLINE) {
+                str = str.strConcat("\\n");
+            } else if (escapedChars[i] == CARRIAGE_RETURN) {
+                str = str.strConcat("\\r");
+            } else if (escapedChars[i] == BACKSPACE) {
+                str = str.strConcat("\\b");
             } else {
-                str = str.strConcat(currentChar);
+                str = str.strConcat(string(abi.encodePacked(b[i])));
             }
         }
 
