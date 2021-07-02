@@ -1,6 +1,6 @@
 # JSON Writer
 
-## Overview
+[![npm version][npm-version-src]][npm-version-href]
 
 **A library to aid in the generation and construction of JSON for smart contract development.**
 
@@ -78,3 +78,9 @@ The full API documentation for JsonWriter can be found in the [docs](docs/JsonWr
 ## License
 
 JsonWriter is released under the [MIT License](LICENSE).
+
+[npm-version-src]: https://img.shields.io/npm/v/solidity-json-writer?style=flat-square
+[npm-version-href]: https://npmjs.com/package/solidity-json-writer
+
+[npm-downloads-src]: https://img.shields.io/npm/dm/solidity-json-writer?style=flat-square
+[npm-downloads-href]: https://npmjs.com/package/solidity-json-writer
