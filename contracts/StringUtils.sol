@@ -33,8 +33,8 @@ library StringUtils {
         }
 
         if (i == type(int256).min) {
-            return
-                "-57896044618658097711785492504343953926634992332820282019728792003956564819968"; // hard-coded since int256 min can't be converted to unsigned
+            // hard-coded since int256 min can't be converted to unsigned
+            return "-57896044618658097711785492504343953926634992332820282019728792003956564819968"; 
         }
 
         bool negative = i < 0;

@@ -28,7 +28,7 @@ library JsonWriter {
     bytes1 constant OPEN_BRACKET = "[";
     bytes1 constant CLOSED_BRACKET = "]";
     bytes1 constant LIST_SEPARATOR = ",";
-   
+
     int256 constant MAX_INT256 = type(int256).max;
 
     /**
@@ -246,11 +246,7 @@ library JsonWriter {
             json.value = appendListSeparator(json);
         }
 
-        json.value = json.value.strConcat(
-            '"',
-            propertyName,
-            '": null'
-        );
+        json.value = json.value.strConcat('"', propertyName, '": null');
         json.depthBitTracker = setListSeparatorFlag(json);
 
         return json;
@@ -422,32 +418,35 @@ library JsonWriter {
         return json;
     }
 
-
     /**
      * @dev Escapes any characters that required by JSON to be escaped.
      */
-    function escapeJsonString(string memory value) private pure returns (string memory str) {
+    function escapeJsonString(string memory value)
+        private
+        pure
+        returns (string memory str)
+    {
         bytes memory b = bytes(value);
-        for(uint i;i < b.length;i += 1) {
-            if(b[i] == BACKSLASH) {
+        for (uint256 i; i < b.length; i += 1) {
+            if (b[i] == BACKSLASH) {
                 str = string(abi.encodePacked(str, BACKSLASH));
-            } else if(b[i] == DOUBLE_QUOTE) {
+            } else if (b[i] == DOUBLE_QUOTE) {
                 str = string(abi.encodePacked(str, BACKSLASH));
-            } else if(b[i] == FRONTSLASH) {
+            } else if (b[i] == FRONTSLASH) {
                 str = string(abi.encodePacked(str, BACKSLASH));
-            } else if(b[i] == HORIZONTAL_TAB) {
+            } else if (b[i] == HORIZONTAL_TAB) {
                 str = string(abi.encodePacked(str, "\\t"));
                 continue;
-            } else if(b[i] == FORM_FEED) {
+            } else if (b[i] == FORM_FEED) {
                 str = string(abi.encodePacked(str, "\\f"));
                 continue;
-            } else if(b[i] == NEWLINE) {
+            } else if (b[i] == NEWLINE) {
                 str = string(abi.encodePacked(str, "\\n"));
                 continue;
-            } else if(b[i] == CARRIAGE_RETURN) {
+            } else if (b[i] == CARRIAGE_RETURN) {
                 str = string(abi.encodePacked(str, "\\r"));
                 continue;
-            } else if(b[i] == BACKSPACE) {
+            } else if (b[i] == BACKSPACE) {
                 str = string(abi.encodePacked(str, "\\b"));
                 continue;
             }
