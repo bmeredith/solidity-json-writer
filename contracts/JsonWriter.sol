@@ -2,6 +2,7 @@
 pragma solidity ^0.8.0;
 
 import "./StringUtils.sol";
+import "hardhat/console.sol";
 
 library JsonWriter {
     using StringUtils for string;
@@ -426,57 +427,48 @@ library JsonWriter {
         returns (string memory str)
     {
         bytes memory b = bytes(value);
-        bytes1[] memory escapedChars = new bytes1[](b.length);
-        bool foundEscapedChars;
+        uint256 numEscapedChars;
 
-        for (uint256 i; i < b.length; i += 1) {
+        for (uint256 i; i < b.length; i++) {
             if (b[i] == BACKSLASH) {
-                escapedChars[i] = BACKSLASH;
-                foundEscapedChars = true;
+                numEscapedChars++;
             } else if (b[i] == DOUBLE_QUOTE) {
-                escapedChars[i] = DOUBLE_QUOTE;
-                foundEscapedChars = true;
+                numEscapedChars++;
             } else if (b[i] == FRONTSLASH) {
-                escapedChars[i] = FRONTSLASH;
-                foundEscapedChars = true;
+                numEscapedChars++;
             } else if (b[i] == HORIZONTAL_TAB) {
-                escapedChars[i] = HORIZONTAL_TAB;
-                foundEscapedChars = true;
+                numEscapedChars++;
             } else if (b[i] == FORM_FEED) {
-                escapedChars[i] = FORM_FEED;
-                foundEscapedChars = true;
+                numEscapedChars++;
             } else if (b[i] == NEWLINE) {
-                escapedChars[i] = NEWLINE;
-                foundEscapedChars = true;
+                numEscapedChars++;
             } else if (b[i] == CARRIAGE_RETURN) {
-                escapedChars[i] = CARRIAGE_RETURN;
-                foundEscapedChars = true;
+                numEscapedChars++;
             } else if (b[i] == BACKSPACE) {
-                escapedChars[i] = BACKSPACE;
-                foundEscapedChars = true;
+                numEscapedChars++;
             }
         }
 
-        if (!foundEscapedChars) {
+        if (numEscapedChars == 0) {
             return value;
         }
 
         for (uint256 i; i < b.length; i += 1) {
-            if (escapedChars[i] == BACKSLASH) {
+            if (b[i] == BACKSLASH) {
                 str = str.strConcat("\\\\");
-            } else if (escapedChars[i] == DOUBLE_QUOTE) {
+            } else if (b[i] == DOUBLE_QUOTE) {
                 str = str.strConcat('\\"');
-            } else if (escapedChars[i] == FRONTSLASH) {
+            } else if (b[i] == FRONTSLASH) {
                 str = str.strConcat("\\/");
-            } else if (escapedChars[i] == HORIZONTAL_TAB) {
+            } else if (b[i] == HORIZONTAL_TAB) {
                 str = str.strConcat("\\t");
-            } else if (escapedChars[i] == FORM_FEED) {
+            } else if (b[i] == FORM_FEED) {
                 str = str.strConcat("\\f");
-            } else if (escapedChars[i] == NEWLINE) {
+            } else if (b[i] == NEWLINE) {
                 str = str.strConcat("\\n");
-            } else if (escapedChars[i] == CARRIAGE_RETURN) {
+            } else if (b[i] == CARRIAGE_RETURN) {
                 str = str.strConcat("\\r");
-            } else if (escapedChars[i] == BACKSPACE) {
+            } else if (b[i] == BACKSPACE) {
                 str = str.strConcat("\\b");
             } else {
                 str = str.strConcat(string(abi.encodePacked(b[i])));
