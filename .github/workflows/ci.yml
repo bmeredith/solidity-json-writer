@@ -1,0 +1,27 @@
+name: solidity-json-writer CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v2
+      with:
+        node-version: '14.x'
+        check-latest: true
+    - name: Install yarn
+      run: npm install -g yarn
+    - name: Install dependencies
+      run: yarn
+    - name: Compile contracts
+      run: npx hardhat compile
+    - name: Test
+      run: npx hardhat test
