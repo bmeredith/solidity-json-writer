@@ -2,7 +2,7 @@
 
 ## Overview
 
-**A library to aid in the generation of JSON for smart contract development.**
+**A library to aid in the generation and construction of JSON for smart contract development.**
 
 Use the library to generate RFC-7159 compliant JSON from within a smart contract.
 
@@ -24,7 +24,7 @@ pragma solidity ^0.8.0;
 
 import "solidity-json-writer/JsonWriter.sol";
 
-contract MyContract {
+contract ExampleContract {
     
     using JsonWriter for JsonWriter.Json;
 
@@ -59,6 +59,17 @@ Output:
 }
 ```
 
+JsonWriter supports the following Solidity primitives:
+* `address`
+* `bool`
+* `int`
+* `string`
+* `uint`
+
+Note: although the concept of `null` does not exist within Solidity, JsonWriter is capable of generating properties and values of `null`.
+
+The full API documentation for JsonWriter can be found in the [docs](docs/JsonWriter.md).
+
 ## License
 
-OpenZeppelin is released under the [MIT License](LICENSE).
+JsonWriter is released under the [MIT License](LICENSE).
