@@ -418,6 +418,24 @@ library JsonWriter {
         return json;
     }
 
+    function getBoolean(uint256 _packedBools, uint256 _boolNumber)
+        public
+        pure
+        returns (bool)
+    {
+        uint256 flag = (_packedBools >> _boolNumber) & uint256(1);
+        return (flag == 1 ? true : false);
+    }
+
+    function setBoolean(
+        uint256 _packedBools,
+        uint256 _boolNumber,
+        bool _value
+    ) public pure returns (uint256) {
+        if (_value) return _packedBools | (uint256(1) << _boolNumber);
+        else return _packedBools & ~(uint256(1) << _boolNumber);
+    }
+
     /**
      * @dev Escapes any characters that required by JSON to be escaped.
      */
@@ -427,51 +445,59 @@ library JsonWriter {
         returns (string memory str)
     {
         bytes memory b = bytes(value);
-        uint256 numEscapedChars;
+        bool foundEscapeChars;
 
         for (uint256 i; i < b.length; i++) {
             if (b[i] == BACKSLASH) {
-                numEscapedChars++;
+                foundEscapeChars = true;
+                break;
             } else if (b[i] == DOUBLE_QUOTE) {
-                numEscapedChars++;
+                foundEscapeChars = true;
+                break;
             } else if (b[i] == FRONTSLASH) {
-                numEscapedChars++;
+                foundEscapeChars = true;
+                break;
             } else if (b[i] == HORIZONTAL_TAB) {
-                numEscapedChars++;
+                foundEscapeChars = true;
+                break;
             } else if (b[i] == FORM_FEED) {
-                numEscapedChars++;
+                foundEscapeChars = true;
+                break;
             } else if (b[i] == NEWLINE) {
-                numEscapedChars++;
+                foundEscapeChars = true;
+                break;
             } else if (b[i] == CARRIAGE_RETURN) {
-                numEscapedChars++;
+                foundEscapeChars = true;
+                break;
             } else if (b[i] == BACKSPACE) {
-                numEscapedChars++;
+                foundEscapeChars = true;
+                break;
             }
         }
 
-        if (numEscapedChars == 0) {
+        if (!foundEscapeChars) {
             return value;
         }
 
-        for (uint256 i; i < b.length; i += 1) {
+        for (uint256 i; i < b.length; i++) {
             if (b[i] == BACKSLASH) {
-                str = str.strConcat("\\\\");
+                str = string(abi.encodePacked(str, "\\\\"));
             } else if (b[i] == DOUBLE_QUOTE) {
-                str = str.strConcat('\\"');
+                str = string(abi.encodePacked(str, '\\"'));
             } else if (b[i] == FRONTSLASH) {
-                str = str.strConcat("\\/");
+                str = string(abi.encodePacked(str, "\\/"));
             } else if (b[i] == HORIZONTAL_TAB) {
-                str = str.strConcat("\\t");
+                str = string(abi.encodePacked(str, "\\t"));
             } else if (b[i] == FORM_FEED) {
-                str = str.strConcat("\\f");
+                str = string(abi.encodePacked(str, "\\f"));
             } else if (b[i] == NEWLINE) {
-                str = str.strConcat("\\n");
+                str = string(abi.encodePacked(str, "\\n"));
             } else if (b[i] == CARRIAGE_RETURN) {
-                str = str.strConcat("\\r");
+                str = string(abi.encodePacked(str, "\\r"));
             } else if (b[i] == BACKSPACE) {
-                str = str.strConcat("\\b");
+                str = string(abi.encodePacked(str, "\\b"));
             } else {
-                str = str.strConcat(string(abi.encodePacked(b[i])));
+                str = string(abi.encodePacked(str, b[i]));
             }
         }
 
