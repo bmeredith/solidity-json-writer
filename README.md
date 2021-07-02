@@ -50,7 +50,7 @@ contract ExampleContract {
 
 Output:
 ```
-{"Years old": 5,"Lowest temp": -30,"CPU": "Intel","CPU": "Intel","Drives": ["500 gigabyte SSD","2 terabyte hard drive"]}
+{"Product": "PC","YearsOld": 5,"LowestTemp": -30,"CPU": "Intel","Drives": ["500 gigabyte SSD","2 terabyte hard drive"]}
 ```
 
 Note: In order to optimize gas, the JSON generated within the smart contract is not pretty-printed. 
@@ -58,9 +58,9 @@ Note: In order to optimize gas, the JSON generated within the smart contract is 
 Pretty-printed output:
 ```
 {
-    "Years old": 5,
-    "Lowest temp": -30,
-    "CPU": "Intel",
+    "Product": "PC",
+    "YearsOld": 5,
+    "LowestTemp": -30,
     "CPU": "Intel",
     "Drives": [
 	"500 gigabyte SSD", 
