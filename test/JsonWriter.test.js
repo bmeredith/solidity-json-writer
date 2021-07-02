@@ -388,9 +388,7 @@ describe('JsonWriter', function () {
       const tests = [
         { arg: '', expected: '"prop": ""' },
         { arg: 'test', expected: '"prop": "test"' },
-        { arg: '1234', expected: '"prop": "1234"' },
-        { arg: '!@#$%^&*();<>?,.:\'"{}[]', expected: '"prop": "!@#$%^&*();<>?,.:\'"{}[]"' },
-        { arg: '💯', expected: '"prop": "💯"' }
+        { arg: '1234', expected: '"prop": "1234"' }
       ];
 
       tests.forEach(({ arg, expected }) => {
@@ -427,8 +425,6 @@ describe('JsonWriter', function () {
         { arg: '', expected: '""' },
         { arg: 'test', expected: '"test"' },
         { arg: '1234', expected: '"1234"' },
-        { arg: '!@#$%^&*();<>?,.:\'"{}[]', expected: '"!@#$%^&*();<>?,.:\'"{}[]"' },
-        { arg: '💯', expected: '"💯"' }
       ];
 
       tests.forEach(({ arg, expected }) => {
@@ -457,6 +453,27 @@ describe('JsonWriter', function () {
         json = await jsonWriter.writeEndArray(json);
 
         expect(json.value).to.equal('["test","test"]');
+      });
+    });
+
+    describe('JSON escape characters', function () {
+      const tests = [
+        { arg: '\\', argName: 'backslash', expected: '"\\\\"' },
+        { arg: '\b', argName: 'backspace', expected: '"\\b"' },
+        { arg: '\r', argName: 'carriage return', expected: '"\\r"' },
+        { arg: '"', argName: 'double quote', expected: '"\\""' },
+        { arg: '\f', argName: 'form feed', expected: '"\\f"' },
+        { arg: '/', argName: 'front slash', expected: '"\\/"' },
+        { arg: '\t', argName: 'horizontal tab', expected: '"\\t"' },
+        { arg: '\n', argName: 'newline', expected: '"\\n"' }
+      ];
+      
+      tests.forEach(({ arg, argName, expected }) => {
+        it(`escapes the '${argName}' character`, async function () {
+          let json = createJsonObject();
+          json = await jsonWriter.writeStringValue(json, arg);
+          expect(json.value).to.equal(expected);
+        });
       });
     });
   });

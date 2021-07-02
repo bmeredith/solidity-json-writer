@@ -2,6 +2,7 @@
 pragma solidity ^0.8.0;
 
 import "./StringUtils.sol";
+import "hardhat/console.sol";
 
 library JsonWriter {
     using StringUtils for string;
@@ -11,6 +12,15 @@ library JsonWriter {
         string value;
     }
 
+    bytes1 constant BACKSLASH = bytes1(uint8(92));
+    bytes1 constant BACKSPACE = bytes1(uint8(8));
+    bytes1 constant CARRIAGE_RETURN = bytes1(uint8(13));
+    bytes1 constant DOUBLE_QUOTE = bytes1(uint8(34));
+    bytes1 constant FORM_FEED = bytes1(uint8(12));
+    bytes1 constant FRONTSLASH = bytes1(uint8(47));
+    bytes1 constant HORIZONTAL_TAB = bytes1(uint8(9));
+    bytes1 constant NEWLINE = bytes1(uint8(10));
+
     string constant TRUE = "true";
     string constant FALSE = "false";
     bytes1 constant OPEN_BRACE = "{";
@@ -18,6 +28,7 @@ library JsonWriter {
     bytes1 constant OPEN_BRACKET = "[";
     bytes1 constant CLOSED_BRACKET = "]";
     bytes1 constant LIST_SEPARATOR = ",";
+   
     int256 constant MAX_INT256 = type(int256).max;
 
     /**
@@ -275,11 +286,12 @@ library JsonWriter {
             json.value = appendListSeparator(json);
         }
 
+        string memory jsonEscapedString = escapeJsonString(value);
         json.value = json.value.strConcat(
             '"',
             propertyName,
             '": "',
-            value,
+            jsonEscapedString,
             '"'
         );
         json.depthBitTracker = setListSeparatorFlag(json);
@@ -299,7 +311,8 @@ library JsonWriter {
             json.value = appendListSeparator(json);
         }
 
-        json.value = json.value.strConcat('"', value, '"');
+        string memory jsonEscapedString = escapeJsonString(value);
+        json.value = json.value.strConcat('"', jsonEscapedString, '"');
         json.depthBitTracker = setListSeparatorFlag(json);
 
         return json;
@@ -407,6 +420,42 @@ library JsonWriter {
         }
 
         return json;
+    }
+
+
+    /**
+     * @dev Escapes any characters that required by JSON to be escaped.
+     */
+    function escapeJsonString(string memory value) private pure returns (string memory str) {
+        bytes memory b = bytes(value);
+        for(uint i;i < b.length;i += 1) {
+            if(b[i] == BACKSLASH) {
+                str = string(abi.encodePacked(str, BACKSLASH));
+            } else if(b[i] == DOUBLE_QUOTE) {
+                str = string(abi.encodePacked(str, BACKSLASH));
+            } else if(b[i] == FRONTSLASH) {
+                str = string(abi.encodePacked(str, BACKSLASH));
+            } else if(b[i] == HORIZONTAL_TAB) {
+                str = string(abi.encodePacked(str, "\\t"));
+                continue;
+            } else if(b[i] == FORM_FEED) {
+                str = string(abi.encodePacked(str, "\\f"));
+                continue;
+            } else if(b[i] == NEWLINE) {
+                str = string(abi.encodePacked(str, "\\n"));
+                continue;
+            } else if(b[i] == CARRIAGE_RETURN) {
+                str = string(abi.encodePacked(str, "\\r"));
+                continue;
+            } else if(b[i] == BACKSPACE) {
+                str = string(abi.encodePacked(str, "\\b"));
+                continue;
+            }
+
+            str = str.strConcat(string(abi.encodePacked(b[i])));
+        }
+
+        return str;
     }
 
     /**
