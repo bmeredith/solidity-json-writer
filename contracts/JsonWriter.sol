@@ -428,30 +428,27 @@ library JsonWriter {
     {
         bytes memory b = bytes(value);
         for (uint256 i; i < b.length; i += 1) {
-            if (b[i] == BACKSLASH) {
-                str = string(abi.encodePacked(str, BACKSLASH));
-            } else if (b[i] == DOUBLE_QUOTE) {
-                str = string(abi.encodePacked(str, BACKSLASH));
-            } else if (b[i] == FRONTSLASH) {
-                str = string(abi.encodePacked(str, BACKSLASH));
-            } else if (b[i] == HORIZONTAL_TAB) {
-                str = string(abi.encodePacked(str, "\\t"));
-                continue;
-            } else if (b[i] == FORM_FEED) {
-                str = string(abi.encodePacked(str, "\\f"));
-                continue;
-            } else if (b[i] == NEWLINE) {
-                str = string(abi.encodePacked(str, "\\n"));
-                continue;
-            } else if (b[i] == CARRIAGE_RETURN) {
-                str = string(abi.encodePacked(str, "\\r"));
-                continue;
-            } else if (b[i] == BACKSPACE) {
-                str = string(abi.encodePacked(str, "\\b"));
-                continue;
-            }
+            string memory currentChar = string(abi.encodePacked(b[i]));
 
-            str = str.strConcat(string(abi.encodePacked(b[i])));
+            if (b[i] == BACKSLASH) {
+                str = str.strConcat('\\', currentChar);
+            } else if (b[i] == DOUBLE_QUOTE) {
+                str = str.strConcat('\\', currentChar);
+            } else if (b[i] == FRONTSLASH) {
+                str = str.strConcat('\\', currentChar);
+            } else if (b[i] == HORIZONTAL_TAB) {
+                str = str.strConcat('\\t');
+            } else if (b[i] == FORM_FEED) {
+                str = str.strConcat('\\f');
+            } else if (b[i] == NEWLINE) {
+                str = str.strConcat('\\n');
+            } else if (b[i] == CARRIAGE_RETURN) {
+                str = str.strConcat('\\r');
+            } else if (b[i] == BACKSPACE) {
+                str = str.strConcat('\\b');
+            } else {
+                str = str.strConcat(currentChar);
+            }
         }
 
         return str;
