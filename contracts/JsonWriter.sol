@@ -104,7 +104,7 @@ library JsonWriter {
         address value
     ) internal pure returns (Json memory) {
         if (json.depthBitTracker < 0) {
-            json.value = appendListSeparator(json);
+            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR));
         }
 
         json.value = string(abi.encodePacked(json.value, '"', propertyName, '": "', addressToString(value), '"'));
@@ -122,7 +122,7 @@ library JsonWriter {
         returns (Json memory)
     {
         if (json.depthBitTracker < 0) {
-            json.value = appendListSeparator(json);
+            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR));
         }
 
         json.value = string(abi.encodePacked(json.value, '"', addressToString(value), '"'));
@@ -140,7 +140,7 @@ library JsonWriter {
         bool value
     ) internal pure returns (Json memory) {
         if (json.depthBitTracker < 0) {
-            json.value = appendListSeparator(json);
+            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR));
         }
 
         string memory strValue;
@@ -165,7 +165,7 @@ library JsonWriter {
         returns (Json memory)
     {
         if (json.depthBitTracker < 0) {
-            json.value = appendListSeparator(json);
+            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR));
         }
 
         string memory strValue;
@@ -190,7 +190,7 @@ library JsonWriter {
         int256 value
     ) internal pure returns (Json memory) {
         if (json.depthBitTracker < 0) {
-            json.value = appendListSeparator(json);
+            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR));
         }
 
         json.value = string(abi.encodePacked(json.value, '"', propertyName, '": ', intToString(value)));
@@ -208,7 +208,7 @@ library JsonWriter {
         returns (Json memory)
     {
         if (json.depthBitTracker < 0) {
-            json.value = appendListSeparator(json);
+            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR));
         }
         
         json.value = string(abi.encodePacked(json.value, intToString(value)));
@@ -226,7 +226,7 @@ library JsonWriter {
         returns (Json memory)
     {
         if (json.depthBitTracker < 0) {
-            json.value = appendListSeparator(json);
+            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR));
         }
 
         json.value = string(abi.encodePacked(json.value, '"', propertyName, '": null'));
@@ -244,7 +244,7 @@ library JsonWriter {
         returns (Json memory)
     {
         if (json.depthBitTracker < 0) {
-            json.value = appendListSeparator(json);
+            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR));
         }
 
         json.value = string(abi.encodePacked(json.value, "null"));
@@ -262,7 +262,7 @@ library JsonWriter {
         string memory value
     ) internal pure returns (Json memory) {
         if (json.depthBitTracker < 0) {
-            json.value = appendListSeparator(json);
+            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR));
         }
 
         string memory jsonEscapedString = escapeJsonString(value);
@@ -281,7 +281,7 @@ library JsonWriter {
         returns (Json memory)
     {
         if (json.depthBitTracker < 0) {
-            json.value = appendListSeparator(json);
+            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR));
         }
 
         string memory jsonEscapedString = escapeJsonString(value);
@@ -300,7 +300,7 @@ library JsonWriter {
         uint256 value
     ) internal pure returns (Json memory) {
         if (json.depthBitTracker < 0) {
-            json.value = appendListSeparator(json);
+            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR));
         }
 
         json.value = string(abi.encodePacked(json.value, '"', propertyName, '": ', uintToString(value)));
@@ -318,7 +318,7 @@ library JsonWriter {
         returns (Json memory)
     {
         if (json.depthBitTracker < 0) {
-            json.value = appendListSeparator(json);
+            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR));
         }
 
         json.value = string(abi.encodePacked(json.value, uintToString(value)));
@@ -336,13 +336,13 @@ library JsonWriter {
         returns (Json memory)
     {
         if (json.depthBitTracker < 0) {
-            json.value = appendListSeparator(json);
+            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR));
         }
 
         json.value = string(abi.encodePacked(json.value, token));
 
         json.depthBitTracker &= MAX_INT256;
-        json.depthBitTracker += 1;
+        json.depthBitTracker++;
 
         return json;
     }
@@ -356,13 +356,13 @@ library JsonWriter {
         bytes1 token
     ) private pure returns (Json memory) {
         if (json.depthBitTracker < 0) {
-            json.value = appendListSeparator(json);
+            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR));
         }
         
         json.value = string(abi.encodePacked(json.value, '"', propertyName, '": ', string(abi.encodePacked(token))));
 
         json.depthBitTracker &= MAX_INT256;
-        json.depthBitTracker += 1;
+        json.depthBitTracker++;
 
         return json;
     }
@@ -379,7 +379,7 @@ library JsonWriter {
 
         json.depthBitTracker = setListSeparatorFlag(json);
         if (getCurrentDepth(json) != 0) {
-            json.depthBitTracker -= 1;
+            json.depthBitTracker--;
         }
 
         return json;
@@ -474,17 +474,6 @@ library JsonWriter {
         return json.depthBitTracker | (int256(1) << 255);
     }
 
-    /**
-     * @dev Appends the list separator character to the JSON string.
-     */
-    function appendListSeparator(Json memory json)
-        private
-        pure
-        returns (string memory)
-    {
-        return string(abi.encodePacked(json.value, LIST_SEPARATOR));
-    }
-
         /**
      * @dev Converts an address to a string.
      */
@@ -494,7 +483,7 @@ library JsonWriter {
         returns (string memory)
     {
         bytes32 value = bytes32(uint256(uint160(_address)));
-        bytes memory alphabet = "0123456789abcdef";
+        bytes16 alphabet = "0123456789abcdef";
 
         bytes memory str = new bytes(42);
         str[0] = "0";
