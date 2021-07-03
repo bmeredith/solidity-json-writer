@@ -138,5 +138,21 @@ contract JsonWriterMock {
         returns (JsonWriter.Json memory)
     {
         return JsonWriter.writeUintValue(json, value);
+    }    
+    
+    function addressToString(address _address)
+        public
+        pure
+        returns (string memory)
+    {
+        return JsonWriter.addressToString(_address);
+    }
+
+    function intToString(int256 _i) public pure returns (string memory) {
+        return JsonWriter.intToString(_i);
+    }
+
+    function uintToString(uint256 _i) public pure returns (string memory) {
+        return JsonWriter.uintToString(_i);
     }
 }
