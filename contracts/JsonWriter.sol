@@ -429,7 +429,7 @@ library JsonWriter {
         bytes memory b = bytes(value);
         bool foundEscapeChars = false;
 
-        for (uint256 i = 0; !foundEscapeChars; ++i) {
+        for (uint256 i = 0; !foundEscapeChars && i < b.length; ++i) {
             if (b[i] == BACKSLASH) {
                 foundEscapeChars = true;
             } else if (b[i] == DOUBLE_QUOTE) {
