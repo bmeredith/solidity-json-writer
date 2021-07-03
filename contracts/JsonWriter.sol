@@ -427,33 +427,25 @@ library JsonWriter {
         returns (string memory str)
     {
         bytes memory b = bytes(value);
-        bool foundEscapeChars;
+        bool foundEscapeChars = false;
 
-        for (uint256 i; i < b.length; i++) {
+        while (!foundEscapeChars) {
             if (b[i] == BACKSLASH) {
                 foundEscapeChars = true;
-                break;
             } else if (b[i] == DOUBLE_QUOTE) {
                 foundEscapeChars = true;
-                break;
             } else if (b[i] == FRONTSLASH) {
                 foundEscapeChars = true;
-                break;
             } else if (b[i] == HORIZONTAL_TAB) {
                 foundEscapeChars = true;
-                break;
             } else if (b[i] == FORM_FEED) {
                 foundEscapeChars = true;
-                break;
             } else if (b[i] == NEWLINE) {
                 foundEscapeChars = true;
-                break;
             } else if (b[i] == CARRIAGE_RETURN) {
                 foundEscapeChars = true;
-                break;
             } else if (b[i] == BACKSPACE) {
                 foundEscapeChars = true;
-                break;
             }
         }
 
