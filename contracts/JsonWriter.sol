@@ -1,11 +1,9 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "./StringUtils.sol";
-import "hardhat/console.sol";
-
 library JsonWriter {
-    using StringUtils for string;
+
+    using JsonWriter for string;
 
     struct Json {
         int256 depthBitTracker;
@@ -109,13 +107,7 @@ library JsonWriter {
             json.value = appendListSeparator(json);
         }
 
-        json.value = json.value.strConcat(
-            '"',
-            propertyName,
-            '": "',
-            StringUtils.addressToString(value),
-            '"'
-        );
+        json.value = string(abi.encodePacked(json.value, '"', propertyName, '": "', addressToString(value), '"'));
         json.depthBitTracker = setListSeparatorFlag(json);
 
         return json;
@@ -133,11 +125,7 @@ library JsonWriter {
             json.value = appendListSeparator(json);
         }
 
-        json.value = json.value.strConcat(
-            '"',
-            StringUtils.addressToString(value),
-            '"'
-        );
+        json.value = string(abi.encodePacked(json.value, '"', addressToString(value), '"'));
         json.depthBitTracker = setListSeparatorFlag(json);
 
         return json;
@@ -162,7 +150,7 @@ library JsonWriter {
             strValue = FALSE;
         }
 
-        json.value = json.value.strConcat('"', propertyName, '": ', strValue);
+        json.value = string(abi.encodePacked(json.value, '"', propertyName, '": ', strValue));
         json.depthBitTracker = setListSeparatorFlag(json);
 
         return json;
@@ -186,8 +174,8 @@ library JsonWriter {
         } else {
             strValue = FALSE;
         }
-
-        json.value = json.value.strConcat(strValue);
+        
+        json.value = string(abi.encodePacked(json.value, strValue));
         json.depthBitTracker = setListSeparatorFlag(json);
 
         return json;
@@ -205,12 +193,7 @@ library JsonWriter {
             json.value = appendListSeparator(json);
         }
 
-        json.value = json.value.strConcat(
-            '"',
-            propertyName,
-            '": ',
-            StringUtils.intToString(value)
-        );
+        json.value = string(abi.encodePacked(json.value, '"', propertyName, '": ', intToString(value)));
         json.depthBitTracker = setListSeparatorFlag(json);
 
         return json;
@@ -227,8 +210,8 @@ library JsonWriter {
         if (json.depthBitTracker < 0) {
             json.value = appendListSeparator(json);
         }
-
-        json.value = json.value.strConcat(StringUtils.intToString(value));
+        
+        json.value = string(abi.encodePacked(json.value, intToString(value)));
         json.depthBitTracker = setListSeparatorFlag(json);
 
         return json;
@@ -246,7 +229,7 @@ library JsonWriter {
             json.value = appendListSeparator(json);
         }
 
-        json.value = json.value.strConcat('"', propertyName, '": null');
+        json.value = string(abi.encodePacked(json.value, '"', propertyName, '": null'));
         json.depthBitTracker = setListSeparatorFlag(json);
 
         return json;
@@ -264,7 +247,7 @@ library JsonWriter {
             json.value = appendListSeparator(json);
         }
 
-        json.value = json.value.strConcat("null");
+        json.value = string(abi.encodePacked(json.value, "null"));
         json.depthBitTracker = setListSeparatorFlag(json);
 
         return json;
@@ -283,13 +266,7 @@ library JsonWriter {
         }
 
         string memory jsonEscapedString = escapeJsonString(value);
-        json.value = json.value.strConcat(
-            '"',
-            propertyName,
-            '": "',
-            jsonEscapedString,
-            '"'
-        );
+        json.value = string(abi.encodePacked(json.value, '"', propertyName, '": "', jsonEscapedString, '"'));
         json.depthBitTracker = setListSeparatorFlag(json);
 
         return json;
@@ -308,7 +285,7 @@ library JsonWriter {
         }
 
         string memory jsonEscapedString = escapeJsonString(value);
-        json.value = json.value.strConcat('"', jsonEscapedString, '"');
+        json.value = string(abi.encodePacked(json.value, '"', jsonEscapedString, '"'));
         json.depthBitTracker = setListSeparatorFlag(json);
 
         return json;
@@ -326,12 +303,7 @@ library JsonWriter {
             json.value = appendListSeparator(json);
         }
 
-        json.value = json.value.strConcat(
-            '"',
-            propertyName,
-            '": ',
-            StringUtils.uintToString(value)
-        );
+        json.value = string(abi.encodePacked(json.value, '"', propertyName, '": ', uintToString(value)));
         json.depthBitTracker = setListSeparatorFlag(json);
 
         return json;
@@ -349,7 +321,7 @@ library JsonWriter {
             json.value = appendListSeparator(json);
         }
 
-        json.value = json.value.strConcat(StringUtils.uintToString(value));
+        json.value = string(abi.encodePacked(json.value, uintToString(value)));
         json.depthBitTracker = setListSeparatorFlag(json);
 
         return json;
@@ -386,13 +358,8 @@ library JsonWriter {
         if (json.depthBitTracker < 0) {
             json.value = appendListSeparator(json);
         }
-
-        json.value = json.value.strConcat(
-            '"',
-            propertyName,
-            '": ',
-            string(abi.encodePacked(token))
-        );
+        
+        json.value = string(abi.encodePacked(json.value, '"', propertyName, '": ', string(abi.encodePacked(token))));
 
         json.depthBitTracker &= MAX_INT256;
         json.depthBitTracker += 1;
@@ -516,5 +483,97 @@ library JsonWriter {
         returns (string memory)
     {
         return string(abi.encodePacked(json.value, LIST_SEPARATOR));
+    }
+
+        /**
+     * @dev Converts an address to a string.
+     */
+    function addressToString(address _address)
+        internal
+        pure
+        returns (string memory)
+    {
+        bytes32 value = bytes32(uint256(uint160(_address)));
+        bytes memory alphabet = "0123456789abcdef";
+
+        bytes memory str = new bytes(42);
+        str[0] = "0";
+        str[1] = "x";
+        for (uint256 i = 0; i < 20; i++) {
+            str[2 + i * 2] = alphabet[uint8(value[i + 12] >> 4)];
+            str[3 + i * 2] = alphabet[uint8(value[i + 12] & 0x0f)];
+        }
+
+        return string(str);
+    }
+
+    /**
+     * @dev Converts an int to a string.
+     */
+    function intToString(int256 i) internal pure returns (string memory) {
+        if (i == 0) {
+            return "0";
+        }
+
+        if (i == type(int256).min) {
+            // hard-coded since int256 min can't be converted to unsigned
+            return "-57896044618658097711785492504343953926634992332820282019728792003956564819968"; 
+        }
+
+        bool negative = i < 0;
+        uint256 j = uint256(negative ? -i : i);
+        uint256 l = j;
+        uint256 len;
+        while (j != 0) {
+            len++;
+            j /= 10;
+        }
+
+        if (negative) {
+            ++len; // make room for '-' sign
+        }
+
+        bytes memory bstr = new bytes(len);
+        uint256 k = len;
+        while (l != 0) {
+            uint8 temp = (48 + uint8(l - (l / 10) * 10));
+            bytes1 b1 = bytes1(temp);
+            bstr[--k] = b1;
+            l /= 10;
+        }
+
+        if (negative) {
+            bstr[0] = "-"; // prepend '-'
+        }
+
+        return string(bstr);
+    }
+
+    /**
+     * @dev Converts a uint to a string.
+     */
+    function uintToString(uint256 _i) internal pure returns (string memory) {
+        if (_i == 0) {
+            return "0";
+        }
+
+        uint256 j = _i;
+        uint256 len;
+        while (j != 0) {
+            len++;
+            j /= 10;
+        }
+
+        bytes memory bstr = new bytes(len);
+        uint256 k = len;
+        while (_i != 0) {
+            k = k - 1;
+            uint8 temp = (48 + uint8(_i - (_i / 10) * 10));
+            bytes1 b1 = bytes1(temp);
+            bstr[k] = b1;
+            _i /= 10;
+        }
+
+        return string(bstr);
     }
 }
