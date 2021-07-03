@@ -104,10 +104,11 @@ library JsonWriter {
         address value
     ) internal pure returns (Json memory) {
         if (json.depthBitTracker < 0) {
-            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR));
+            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR, '"', propertyName, '": "', addressToString(value), '"'));
+        } else {
+            json.value = string(abi.encodePacked(json.value, '"', propertyName, '": "', addressToString(value), '"'));
         }
 
-        json.value = string(abi.encodePacked(json.value, '"', propertyName, '": "', addressToString(value), '"'));
         json.depthBitTracker = setListSeparatorFlag(json);
 
         return json;
@@ -122,10 +123,11 @@ library JsonWriter {
         returns (Json memory)
     {
         if (json.depthBitTracker < 0) {
-            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR));
+            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR, '"', addressToString(value), '"'));
+        } else {
+            json.value = string(abi.encodePacked(json.value, '"', addressToString(value), '"'));
         }
 
-        json.value = string(abi.encodePacked(json.value, '"', addressToString(value), '"'));
         json.depthBitTracker = setListSeparatorFlag(json);
 
         return json;
@@ -139,10 +141,6 @@ library JsonWriter {
         string memory propertyName,
         bool value
     ) internal pure returns (Json memory) {
-        if (json.depthBitTracker < 0) {
-            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR));
-        }
-
         string memory strValue;
         if (value) {
             strValue = TRUE;
@@ -150,7 +148,12 @@ library JsonWriter {
             strValue = FALSE;
         }
 
-        json.value = string(abi.encodePacked(json.value, '"', propertyName, '": ', strValue));
+        if (json.depthBitTracker < 0) {
+            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR, '"', propertyName, '": ', strValue));
+        } else {
+            json.value = string(abi.encodePacked(json.value, '"', propertyName, '": ', strValue));
+        }
+
         json.depthBitTracker = setListSeparatorFlag(json);
 
         return json;
@@ -164,18 +167,19 @@ library JsonWriter {
         pure
         returns (Json memory)
     {
-        if (json.depthBitTracker < 0) {
-            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR));
-        }
-
         string memory strValue;
         if (value) {
             strValue = TRUE;
         } else {
             strValue = FALSE;
         }
+
+        if (json.depthBitTracker < 0) {
+            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR, strValue));
+        } else {
+            json.value = string(abi.encodePacked(json.value, strValue));
+        }
         
-        json.value = string(abi.encodePacked(json.value, strValue));
         json.depthBitTracker = setListSeparatorFlag(json);
 
         return json;
@@ -190,10 +194,11 @@ library JsonWriter {
         int256 value
     ) internal pure returns (Json memory) {
         if (json.depthBitTracker < 0) {
-            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR));
+            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR, '"', propertyName, '": ', intToString(value)));
+        } else {
+            json.value = string(abi.encodePacked(json.value, '"', propertyName, '": ', intToString(value)));
         }
 
-        json.value = string(abi.encodePacked(json.value, '"', propertyName, '": ', intToString(value)));
         json.depthBitTracker = setListSeparatorFlag(json);
 
         return json;
@@ -208,10 +213,11 @@ library JsonWriter {
         returns (Json memory)
     {
         if (json.depthBitTracker < 0) {
-            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR));
+            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR, intToString(value)));
+        } else {
+            json.value = string(abi.encodePacked(json.value, intToString(value)));
         }
         
-        json.value = string(abi.encodePacked(json.value, intToString(value)));
         json.depthBitTracker = setListSeparatorFlag(json);
 
         return json;
@@ -226,10 +232,11 @@ library JsonWriter {
         returns (Json memory)
     {
         if (json.depthBitTracker < 0) {
-            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR));
+            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR, '"', propertyName, '": null'));
+        } else {
+            json.value = string(abi.encodePacked(json.value, '"', propertyName, '": null'));
         }
 
-        json.value = string(abi.encodePacked(json.value, '"', propertyName, '": null'));
         json.depthBitTracker = setListSeparatorFlag(json);
 
         return json;
@@ -244,10 +251,11 @@ library JsonWriter {
         returns (Json memory)
     {
         if (json.depthBitTracker < 0) {
-            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR));
+            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR, "null"));
+        } else {
+            json.value = string(abi.encodePacked(json.value, "null"));
         }
 
-        json.value = string(abi.encodePacked(json.value, "null"));
         json.depthBitTracker = setListSeparatorFlag(json);
 
         return json;
@@ -261,12 +269,13 @@ library JsonWriter {
         string memory propertyName,
         string memory value
     ) internal pure returns (Json memory) {
+        string memory jsonEscapedString = escapeJsonString(value);
         if (json.depthBitTracker < 0) {
-            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR));
+            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR, '"', propertyName, '": "', jsonEscapedString, '"'));
+        } else {
+            json.value = string(abi.encodePacked(json.value, '"', propertyName, '": "', jsonEscapedString, '"'));
         }
 
-        string memory jsonEscapedString = escapeJsonString(value);
-        json.value = string(abi.encodePacked(json.value, '"', propertyName, '": "', jsonEscapedString, '"'));
         json.depthBitTracker = setListSeparatorFlag(json);
 
         return json;
@@ -280,12 +289,13 @@ library JsonWriter {
         pure
         returns (Json memory)
     {
+        string memory jsonEscapedString = escapeJsonString(value);
         if (json.depthBitTracker < 0) {
-            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR));
+            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR, '"', jsonEscapedString, '"'));
+        } else {
+            json.value = string(abi.encodePacked(json.value, '"', jsonEscapedString, '"'));
         }
 
-        string memory jsonEscapedString = escapeJsonString(value);
-        json.value = string(abi.encodePacked(json.value, '"', jsonEscapedString, '"'));
         json.depthBitTracker = setListSeparatorFlag(json);
 
         return json;
@@ -300,10 +310,11 @@ library JsonWriter {
         uint256 value
     ) internal pure returns (Json memory) {
         if (json.depthBitTracker < 0) {
-            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR));
+            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR, '"', propertyName, '": ', uintToString(value)));
+        } else {
+            json.value = string(abi.encodePacked(json.value, '"', propertyName, '": ', uintToString(value)));
         }
 
-        json.value = string(abi.encodePacked(json.value, '"', propertyName, '": ', uintToString(value)));
         json.depthBitTracker = setListSeparatorFlag(json);
 
         return json;
@@ -318,10 +329,11 @@ library JsonWriter {
         returns (Json memory)
     {
         if (json.depthBitTracker < 0) {
-            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR));
+            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR, uintToString(value)));
+        } else {
+            json.value = string(abi.encodePacked(json.value, uintToString(value)));
         }
 
-        json.value = string(abi.encodePacked(json.value, uintToString(value)));
         json.depthBitTracker = setListSeparatorFlag(json);
 
         return json;
@@ -336,10 +348,10 @@ library JsonWriter {
         returns (Json memory)
     {
         if (json.depthBitTracker < 0) {
-            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR));
+            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR, token));
+        } else {
+            json.value = string(abi.encodePacked(json.value, token));
         }
-
-        json.value = string(abi.encodePacked(json.value, token));
 
         json.depthBitTracker &= MAX_INT256;
         json.depthBitTracker++;
@@ -356,10 +368,10 @@ library JsonWriter {
         bytes1 token
     ) private pure returns (Json memory) {
         if (json.depthBitTracker < 0) {
-            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR));
+            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR, '"', propertyName, '": ', token));
+        } else {
+            json.value = string(abi.encodePacked(json.value, '"', propertyName, '": ', token));
         }
-        
-        json.value = string(abi.encodePacked(json.value, '"', propertyName, '": ', string(abi.encodePacked(token))));
 
         json.depthBitTracker &= MAX_INT256;
         json.depthBitTracker++;
@@ -376,8 +388,8 @@ library JsonWriter {
         returns (Json memory)
     {
         json.value = string(abi.encodePacked(json.value, token));
-
         json.depthBitTracker = setListSeparatorFlag(json);
+        
         if (getCurrentDepth(json) != 0) {
             json.depthBitTracker--;
         }
