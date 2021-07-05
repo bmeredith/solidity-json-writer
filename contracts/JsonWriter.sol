@@ -32,7 +32,7 @@ library JsonWriter {
     /**
      * @dev Writes the beginning of a JSON array.
      */
-    function writeStartArray(Json memory json)
+    function writeStartArray(Json memory json) 
         internal
         pure
         returns (Json memory)
@@ -500,7 +500,7 @@ library JsonWriter {
         bytes memory str = new bytes(42);
         str[0] = "0";
         str[1] = "x";
-        for (uint256 i = 0; i < 20; i++) {
+        for (uint256 i; i < 20; i++) {
             str[2 + i * 2] = alphabet[uint8(value[i + 12] >> 4)];
             str[3 + i * 2] = alphabet[uint8(value[i + 12] & 0x0f)];
         }
@@ -517,29 +517,30 @@ library JsonWriter {
         }
 
         if (i == type(int256).min) {
-            // hard-coded since int256 min can't be converted to unsigned
+            // hard-coded since int256 min value can't be converted to unsigned
             return "-57896044618658097711785492504343953926634992332820282019728792003956564819968"; 
         }
 
         bool negative = i < 0;
-        uint256 j = uint256(negative ? -i : i);
-        uint256 l = j;
         uint256 len;
+        uint256 j;
+        if(!negative) {
+            j = uint256(i);
+        } else {
+            j = uint256(-i);
+            ++len; // make room for '-' sign
+        }
+        
+        uint256 l = j;
         while (j != 0) {
             len++;
             j /= 10;
         }
 
-        if (negative) {
-            ++len; // make room for '-' sign
-        }
-
         bytes memory bstr = new bytes(len);
         uint256 k = len;
         while (l != 0) {
-            uint8 temp = (48 + uint8(l - (l / 10) * 10));
-            bytes1 b1 = bytes1(temp);
-            bstr[--k] = b1;
+            bstr[--k] = bytes1((48 + uint8(l - (l / 10) * 10)));
             l /= 10;
         }
 
@@ -568,10 +569,7 @@ library JsonWriter {
         bytes memory bstr = new bytes(len);
         uint256 k = len;
         while (_i != 0) {
-            k = k - 1;
-            uint8 temp = (48 + uint8(_i - (_i / 10) * 10));
-            bytes1 b1 = bytes1(temp);
-            bstr[k] = b1;
+            bstr[--k] = bytes1((48 + uint8(_i - (_i / 10) * 10)));
             _i /= 10;
         }
 
