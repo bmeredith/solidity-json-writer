@@ -2,12 +2,17 @@
   "name": "solidity-json-writer",
   "author": "bmeredith",
   "license": "MIT",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "description": "A library to aid in the generation and construction of JSON for smart contract development.",
   "main": "hardhat.config.js",
   "directories": {
     "test": "test"
   },
+  "files": [
+    "/contracts/**/*.sol",
+    "!/contracts/mocks/**/*",
+    "/docs"
+  ],
   "keywords": [
     "solidity",
     "json",

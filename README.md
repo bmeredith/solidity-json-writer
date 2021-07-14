@@ -23,7 +23,7 @@ Once installed, you can use the library by importing it:
 ```solidity
 pragma solidity ^0.8.0;
 
-import "solidity-json-writer/JsonWriter.sol";
+import "solidity-json-writer/contracts/JsonWriter.sol";
 
 contract ExampleContract {
     
