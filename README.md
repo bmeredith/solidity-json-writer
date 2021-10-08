@@ -74,7 +74,7 @@ Pretty-printed output:
 When using the library to generate JSON for ERC-721 metadata, there are a few things to take into account:
 
 1. If the generated JSON for metadata does not contain [RFC-3986](https://datatracker.ietf.org/doc/html/rfc3986#section-2.2) reserved characters, `data:application/json,` should be prepended to that JSON.
-2. If the metadata does contain reserved characters, the general approach outlined in [Usage](#usage) should be used instead.
+2. If the metadata does contain reserved characters, prepend `data:application/json;base64` and then encode the generated JSON as base64.
 
 JsonWriter supports the following Solidity primitives:
 * `address`
