@@ -97,5 +97,5 @@ JsonWriter is released under the [MIT License](LICENSE).
 [npm-downloads-src]: https://img.shields.io/npm/dm/solidity-json-writer?style=flat-square
 [npm-downloads-href]: https://npmjs.com/package/solidity-json-writer
 
-[github-actions-src]: https://img.shields.io/github/workflow/status/bmeredith/solidity-json-writer/solidity-json-writer%20CI
+[github-actions-src]: https://img.shields.io/github/actions/workflow/status/bmeredith/solidity-json-writer/ci.yml?branch=main
 [github-actions-href]: https://github.com/bmeredith/solidity-json-writer/actions?query=workflow%3Aci
