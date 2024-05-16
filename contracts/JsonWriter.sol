@@ -1,6 +1,11 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
+/**
+ * @title JsonWriter
+ * @author Ben Meredith (@bmeredith)
+ * @dev A library to generate RFC-7159 compliant JSON from within a smart contract.
+ */
 library JsonWriter {
 
     using JsonWriter for string;
@@ -550,7 +555,7 @@ library JsonWriter {
         bool negative = i < 0;
         uint256 len;
         uint256 j;
-        if(!negative) {
+        if (!negative) {
             j = uint256(i);
         } else {
             j = uint256(-i);
