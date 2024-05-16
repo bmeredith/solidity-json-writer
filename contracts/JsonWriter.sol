@@ -415,7 +415,7 @@ library JsonWriter {
         bytes memory b = bytes(value);
         bool foundEscapeChars;
 
-        for (uint256 i; i < b.length; i++) {
+        for (uint256 i; i < b.length;) {
             if (b[i] == BACKSLASH) {
                 foundEscapeChars = true;
                 break;
@@ -441,13 +441,17 @@ library JsonWriter {
                 foundEscapeChars = true;
                 break;
             }
+
+            unchecked {
+                ++i;
+            }
         }
 
         if (!foundEscapeChars) {
             return value;
         }
 
-        for (uint256 i; i < b.length; i++) {
+        for (uint256 i; i < b.length;) {
             if (b[i] == BACKSLASH) {
                 str = string(abi.encodePacked(str, "\\\\"));
             } else if (b[i] == DOUBLE_QUOTE) {
@@ -466,6 +470,10 @@ library JsonWriter {
                 str = string(abi.encodePacked(str, "\\b"));
             } else {
                 str = string(abi.encodePacked(str, b[i]));
+            }
+
+            unchecked {
+                ++i;
             }
         }
 
