@@ -28,6 +28,8 @@ library JsonWriter {
     bytes1 constant LIST_SEPARATOR = ",";
 
     int256 constant MAX_INT256 = type(int256).max;
+    bytes16 constant HEX_DIGITS = "0123456789abcdef";
+    bytes16 constant HEX_CAPITAL = "0123456789ABCDEF";
 
     /**
      * @dev Writes the beginning of a JSON array.
@@ -486,7 +488,7 @@ library JsonWriter {
         return json.depthBitTracker | (int256(1) << 255);
     }
 
-        /**
+    /**
      * @dev Converts an address to a string.
      */
     function addressToString(address _address)
@@ -494,18 +496,42 @@ library JsonWriter {
         pure
         returns (string memory)
     {
-        bytes32 value = bytes32(uint256(uint160(_address)));
-        bytes16 alphabet = "0123456789abcdef";
+        bytes memory lowercase = new bytes(40);
+        uint160 currentAddressValue = uint160(_address);
 
-        bytes memory str = new bytes(42);
-        str[0] = "0";
-        str[1] = "x";
-        for (uint256 i; i < 20; i++) {
-            str[2 + i * 2] = alphabet[uint8(value[i + 12] >> 4)];
-            str[3 + i * 2] = alphabet[uint8(value[i + 12] & 0x0f)];
+        for (uint256 i; i < 40;) {
+            lowercase[39 - i] = HEX_DIGITS[currentAddressValue & 0xf];
+            currentAddressValue >>= 4;
+
+            unchecked {
+                ++i;
+            }
+        }
+        bytes32 hashedAddress = keccak256(abi.encodePacked(lowercase));
+
+        bytes memory buffer = new bytes(42);
+        buffer[0] = '0';
+        buffer[1] = 'x';
+
+        uint160 addressValue = uint160(_address);
+        uint160 hashValue = uint160(bytes20(hashedAddress));
+        for (uint256 i = 41; i > 1;) {
+            uint256 hashIndex = hashValue & 0xf;
+            if (hashIndex > 7) {
+                buffer[i] = HEX_CAPITAL[addressValue & 0xf];
+            }
+            else {
+                buffer[i] = HEX_DIGITS[addressValue & 0xf];
+            }
+            addressValue >>= 4;
+            hashValue >>= 4;
+
+            unchecked {
+                --i;
+            }
         }
 
-        return string(str);
+        return string(abi.encodePacked(buffer));
     }
 
     /**
