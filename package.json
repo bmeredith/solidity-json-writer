@@ -19,13 +19,17 @@
     "writer"
   ],
   "devDependencies": {
-    "@nomiclabs/hardhat-ethers": "^2.0.2",
-    "@nomiclabs/hardhat-waffle": "^2.0.1",
+    "@nomiclabs/hardhat-ethers": "^2.2.3",
+    "@nomiclabs/hardhat-waffle": "^2.0.6",
+    "@types/node": "^20.12.12",
+    "@types/sinon-chai": "3.2.3",
     "chai": "^4.3.4",
     "ethereum-waffle": "^3.4.0",
     "ethers": "^5.4.0",
     "hardhat": "^2.4.1",
-    "solc-0.8.6": "npm:solc@^0.8.6",
-    "solidity-docgen": "^0.5.13"
-  }
+    "solc": "^0.8.25",
+    "solidity-docgen": "^0.5.16",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {}
 }
