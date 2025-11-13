@@ -88,9 +88,9 @@ contract JsonWriterStringTest is Test {
         entries[1] = StringTestCase('\x08', '"\\b"');
         entries[2] = StringTestCase('\r', '"\\r"');
         entries[3] = StringTestCase('"', '"\\""');
-        entries[5] = StringTestCase('\x0c', '"\\f"');
-        entries[6] = StringTestCase('/', '"\\/"');
-        entries[4] = StringTestCase('\t', '"\\t"');
+        entries[4] = StringTestCase('\x0c', '"\\f"');
+        entries[5] = StringTestCase('/', '"\\/"');
+        entries[6] = StringTestCase('\t', '"\\t"');
         entries[7] = StringTestCase('\n', '"\\n"');
 
         return entries;
