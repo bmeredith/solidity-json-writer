@@ -7,10 +7,27 @@ import {JsonWriter} from "../src/JsonWriter.sol";
 contract JsonWriterAddressTest is Test {
     using JsonWriter for JsonWriter.Json;
 
-    function test_writesAddressValueOf() public pure {
-        JsonWriter.Json memory json;
+    struct AddressValueTestCase {
+        address arg;
+        string expected;
+    }
 
-        assertEq(json.value, ' ');
+    function fixtureValues() public pure returns (AddressValueTestCase[] memory) {
+        AddressValueTestCase[] memory entries = new AddressValueTestCase[](5);
+        entries[0] = AddressValueTestCase(0x0000000000000000000000000000000000000000, '"0x0000000000000000000000000000000000000000"');
+        entries[1] = AddressValueTestCase(0x1111111111111111111111111111111111111111, '"0x1111111111111111111111111111111111111111"');
+        entries[2] = AddressValueTestCase(0x6B175474E89094C44Da98b954EedeAC495271d0F, '"0x6B175474E89094C44Da98b954EedeAC495271d0F"');
+        entries[3] = AddressValueTestCase(0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF, '"0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF"');
+        entries[4] = AddressValueTestCase(0x000000000000000000000000000000000000dEaD, '"0x000000000000000000000000000000000000dEaD"');
+
+        return entries;
+    }
+
+    function table_writesAddressValueOf(AddressValueTestCase memory values) public pure {
+        JsonWriter.Json memory json;
+        json = json.writeAddressValue(values.arg);
+
+        assertEq(json.value, values.expected);
     }
 
     function test_writesArrayWithSingleAddressValue() public pure {
@@ -30,12 +47,29 @@ contract JsonWriterAddressTest is Test {
         json = json.writeEndArray();
 
         assertEq(json.value, '["0x1111111111111111111111111111111111111111","0x2222222222222222222222222222222222222222"]');
+    }    
+    
+    struct AddressPropertyTestCase {
+        address arg;
+        string expected;
     }
 
-    function test_writesAddressPropertyOf() public pure {
-        JsonWriter.Json memory json;
+    function fixtureProperties() public pure returns (AddressPropertyTestCase[] memory) {
+        AddressPropertyTestCase[] memory entries = new AddressPropertyTestCase[](5);
+        entries[0] = AddressPropertyTestCase(0x0000000000000000000000000000000000000000, '"prop": "0x0000000000000000000000000000000000000000"');
+        entries[1] = AddressPropertyTestCase(0x1111111111111111111111111111111111111111, '"prop": "0x1111111111111111111111111111111111111111"');
+        entries[2] = AddressPropertyTestCase(0x6B175474E89094C44Da98b954EedeAC495271d0F, '"prop": "0x6B175474E89094C44Da98b954EedeAC495271d0F"');
+        entries[3] = AddressPropertyTestCase(0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF, '"prop": "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF"');
+        entries[4] = AddressPropertyTestCase(0x000000000000000000000000000000000000dEaD, '"prop": "0x000000000000000000000000000000000000dEaD"');
 
-        assertEq(json.value, ' ');
+        return entries;
+    }
+
+    function table_writesAddressPropertyOf(AddressPropertyTestCase memory properties) public pure {
+        JsonWriter.Json memory json;
+        json = json.writeAddressProperty('prop', properties.arg);
+
+        assertEq(json.value, properties.expected);
     }
 
     function test_writesObjectWithSingleAddressPropertyAndValue() public pure {
