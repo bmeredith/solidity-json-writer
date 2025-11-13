@@ -7,7 +7,6 @@ pragma solidity ^0.8.0;
  * @dev A library to generate RFC-7159 compliant JSON from within a smart contract.
  */
 library JsonWriter {
-
     using JsonWriter for string;
 
     struct Json {
@@ -39,79 +38,57 @@ library JsonWriter {
     /**
      * @dev Writes the beginning of a JSON array.
      */
-    function writeStartArray(Json memory json) 
-        internal
-        pure
-        returns (Json memory)
-    {
+    function writeStartArray(Json memory json) internal pure returns (Json memory) {
         return writeStart(json, OPEN_BRACKET);
     }
 
     /**
      * @dev Writes the beginning of a JSON array with a property name as the key.
      */
-    function writeStartArray(Json memory json, string memory propertyName)
-        internal
-        pure
-        returns (Json memory)
-    {
+    function writeStartArray(Json memory json, string memory propertyName) internal pure returns (Json memory) {
         return writeStart(json, propertyName, OPEN_BRACKET);
     }
 
     /**
      * @dev Writes the beginning of a JSON object.
      */
-    function writeStartObject(Json memory json)
-        internal
-        pure
-        returns (Json memory)
-    {
+    function writeStartObject(Json memory json) internal pure returns (Json memory) {
         return writeStart(json, OPEN_BRACE);
     }
 
     /**
      * @dev Writes the beginning of a JSON object with a property name as the key.
      */
-    function writeStartObject(Json memory json, string memory propertyName)
-        internal
-        pure
-        returns (Json memory)
-    {
+    function writeStartObject(Json memory json, string memory propertyName) internal pure returns (Json memory) {
         return writeStart(json, propertyName, OPEN_BRACE);
     }
 
     /**
      * @dev Writes the end of a JSON array.
      */
-    function writeEndArray(Json memory json)
-        internal
-        pure
-        returns (Json memory)
-    {
+    function writeEndArray(Json memory json) internal pure returns (Json memory) {
         return writeEnd(json, CLOSED_BRACKET);
     }
 
     /**
      * @dev Writes the end of a JSON object.
      */
-    function writeEndObject(Json memory json)
-        internal
-        pure
-        returns (Json memory)
-    {
+    function writeEndObject(Json memory json) internal pure returns (Json memory) {
         return writeEnd(json, CLOSED_BRACE);
     }
 
     /**
      * @dev Writes the property name and address value (as a JSON string) as part of a name/value pair of a JSON object.
      */
-    function writeAddressProperty(
-        Json memory json,
-        string memory propertyName,
-        address value
-    ) internal pure returns (Json memory) {
+    function writeAddressProperty(Json memory json, string memory propertyName, address value)
+        internal
+        pure
+        returns (Json memory)
+    {
         if (json.depthBitTracker < 0) {
-            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR, '"', propertyName, '": "', addressToString(value), '"'));
+            json.value = string(
+                abi.encodePacked(json.value, LIST_SEPARATOR, '"', propertyName, '": "', addressToString(value), '"')
+            );
         } else {
             json.value = string(abi.encodePacked(json.value, '"', propertyName, '": "', addressToString(value), '"'));
         }
@@ -124,11 +101,7 @@ library JsonWriter {
     /**
      * @dev Writes the address value (as a JSON string) as an element of a JSON array.
      */
-    function writeAddressValue(Json memory json, address value)
-        internal
-        pure
-        returns (Json memory)
-    {
+    function writeAddressValue(Json memory json, address value) internal pure returns (Json memory) {
         if (json.depthBitTracker < 0) {
             json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR, '"', addressToString(value), '"'));
         } else {
@@ -143,11 +116,11 @@ library JsonWriter {
     /**
      * @dev Writes the property name and boolean value (as a JSON literal "true" or "false") as part of a name/value pair of a JSON object.
      */
-    function writeBooleanProperty(
-        Json memory json,
-        string memory propertyName,
-        bool value
-    ) internal pure returns (Json memory) {
+    function writeBooleanProperty(Json memory json, string memory propertyName, bool value)
+        internal
+        pure
+        returns (Json memory)
+    {
         string memory strValue;
         if (value) {
             strValue = TRUE;
@@ -169,11 +142,7 @@ library JsonWriter {
     /**
      * @dev Writes the boolean value (as a JSON literal "true" or "false") as an element of a JSON array.
      */
-    function writeBooleanValue(Json memory json, bool value)
-        internal
-        pure
-        returns (Json memory)
-    {
+    function writeBooleanValue(Json memory json, bool value) internal pure returns (Json memory) {
         string memory strValue;
         if (value) {
             strValue = TRUE;
@@ -186,7 +155,7 @@ library JsonWriter {
         } else {
             json.value = string(abi.encodePacked(json.value, strValue));
         }
-        
+
         json.depthBitTracker = setListSeparatorFlag(json);
 
         return json;
@@ -195,13 +164,14 @@ library JsonWriter {
     /**
      * @dev Writes the property name and int value (as a JSON number) as part of a name/value pair of a JSON object.
      */
-    function writeIntProperty(
-        Json memory json,
-        string memory propertyName,
-        int256 value
-    ) internal pure returns (Json memory) {
+    function writeIntProperty(Json memory json, string memory propertyName, int256 value)
+        internal
+        pure
+        returns (Json memory)
+    {
         if (json.depthBitTracker < 0) {
-            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR, '"', propertyName, '": ', intToString(value)));
+            json.value =
+                string(abi.encodePacked(json.value, LIST_SEPARATOR, '"', propertyName, '": ', intToString(value)));
         } else {
             json.value = string(abi.encodePacked(json.value, '"', propertyName, '": ', intToString(value)));
         }
@@ -214,17 +184,13 @@ library JsonWriter {
     /**
      * @dev Writes the int value (as a JSON number) as an element of a JSON array.
      */
-    function writeIntValue(Json memory json, int256 value)
-        internal
-        pure
-        returns (Json memory)
-    {
+    function writeIntValue(Json memory json, int256 value) internal pure returns (Json memory) {
         if (json.depthBitTracker < 0) {
             json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR, intToString(value)));
         } else {
             json.value = string(abi.encodePacked(json.value, intToString(value)));
         }
-        
+
         json.depthBitTracker = setListSeparatorFlag(json);
 
         return json;
@@ -233,11 +199,7 @@ library JsonWriter {
     /**
      * @dev Writes the property name and value of null as part of a name/value pair of a JSON object.
      */
-    function writeNullProperty(Json memory json, string memory propertyName)
-        internal
-        pure
-        returns (Json memory)
-    {
+    function writeNullProperty(Json memory json, string memory propertyName) internal pure returns (Json memory) {
         if (json.depthBitTracker < 0) {
             json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR, '"', propertyName, '": null'));
         } else {
@@ -252,11 +214,7 @@ library JsonWriter {
     /**
      * @dev Writes the value of null as an element of a JSON array.
      */
-    function writeNullValue(Json memory json)
-        internal
-        pure
-        returns (Json memory)
-    {
+    function writeNullValue(Json memory json) internal pure returns (Json memory) {
         if (json.depthBitTracker < 0) {
             json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR, "null"));
         } else {
@@ -271,14 +229,15 @@ library JsonWriter {
     /**
      * @dev Writes the string text value (as a JSON string) as an element of a JSON array.
      */
-    function writeStringProperty(
-        Json memory json,
-        string memory propertyName,
-        string memory value
-    ) internal pure returns (Json memory) {
+    function writeStringProperty(Json memory json, string memory propertyName, string memory value)
+        internal
+        pure
+        returns (Json memory)
+    {
         string memory jsonEscapedString = escapeJsonString(value);
         if (json.depthBitTracker < 0) {
-            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR, '"', propertyName, '": "', jsonEscapedString, '"'));
+            json.value =
+                string(abi.encodePacked(json.value, LIST_SEPARATOR, '"', propertyName, '": "', jsonEscapedString, '"'));
         } else {
             json.value = string(abi.encodePacked(json.value, '"', propertyName, '": "', jsonEscapedString, '"'));
         }
@@ -291,11 +250,7 @@ library JsonWriter {
     /**
      * @dev Writes the property name and string text value (as a JSON string) as part of a name/value pair of a JSON object.
      */
-    function writeStringValue(Json memory json, string memory value)
-        internal
-        pure
-        returns (Json memory)
-    {
+    function writeStringValue(Json memory json, string memory value) internal pure returns (Json memory) {
         string memory jsonEscapedString = escapeJsonString(value);
         if (json.depthBitTracker < 0) {
             json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR, '"', jsonEscapedString, '"'));
@@ -311,13 +266,14 @@ library JsonWriter {
     /**
      * @dev Writes the property name and uint value (as a JSON number) as part of a name/value pair of a JSON object.
      */
-    function writeUintProperty(
-        Json memory json,
-        string memory propertyName,
-        uint256 value
-    ) internal pure returns (Json memory) {
+    function writeUintProperty(Json memory json, string memory propertyName, uint256 value)
+        internal
+        pure
+        returns (Json memory)
+    {
         if (json.depthBitTracker < 0) {
-            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR, '"', propertyName, '": ', uintToString(value)));
+            json.value =
+                string(abi.encodePacked(json.value, LIST_SEPARATOR, '"', propertyName, '": ', uintToString(value)));
         } else {
             json.value = string(abi.encodePacked(json.value, '"', propertyName, '": ', uintToString(value)));
         }
@@ -330,11 +286,7 @@ library JsonWriter {
     /**
      * @dev Writes the uint value (as a JSON number) as an element of a JSON array.
      */
-    function writeUintValue(Json memory json, uint256 value)
-        internal
-        pure
-        returns (Json memory)
-    {
+    function writeUintValue(Json memory json, uint256 value) internal pure returns (Json memory) {
         if (json.depthBitTracker < 0) {
             json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR, uintToString(value)));
         } else {
@@ -349,11 +301,7 @@ library JsonWriter {
     /**
      * @dev Writes the beginning of a JSON array or object based on the token parameter.
      */
-    function writeStart(Json memory json, bytes1 token)
-        private
-        pure
-        returns (Json memory)
-    {
+    function writeStart(Json memory json, bytes1 token) private pure returns (Json memory) {
         if (json.depthBitTracker < 0) {
             json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR, token));
         } else {
@@ -369,11 +317,7 @@ library JsonWriter {
     /**
      * @dev Writes the beginning of a JSON array or object based on the token parameter with a property name as the key.
      */
-    function writeStart(
-        Json memory json,
-        string memory propertyName,
-        bytes1 token
-    ) private pure returns (Json memory) {
+    function writeStart(Json memory json, string memory propertyName, bytes1 token) private pure returns (Json memory) {
         if (json.depthBitTracker < 0) {
             json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR, '"', propertyName, '": ', token));
         } else {
@@ -389,14 +333,10 @@ library JsonWriter {
     /**
      * @dev Writes the end of a JSON array or object based on the token parameter.
      */
-    function writeEnd(Json memory json, bytes1 token)
-        private
-        pure
-        returns (Json memory)
-    {
+    function writeEnd(Json memory json, bytes1 token) private pure returns (Json memory) {
         json.value = string(abi.encodePacked(json.value, token));
         json.depthBitTracker = setListSeparatorFlag(json);
-        
+
         if (getCurrentDepth(json) != 0) {
             json.depthBitTracker--;
         }
@@ -407,11 +347,7 @@ library JsonWriter {
     /**
      * @dev Escapes any characters that required by JSON to be escaped.
      */
-    function escapeJsonString(string memory value)
-        private
-        pure
-        returns (string memory str)
-    {
+    function escapeJsonString(string memory value) private pure returns (string memory str) {
         bytes memory b = bytes(value);
         bool foundEscapeChars;
 
@@ -493,22 +429,14 @@ library JsonWriter {
      * if (json.depthBitTracker >> 255) == 1, add a list separator before writing the item
      * else, no list separator is needed since we are writing the first item.
      */
-    function setListSeparatorFlag(Json memory json)
-        private
-        pure
-        returns (int256)
-    {
+    function setListSeparatorFlag(Json memory json) private pure returns (int256) {
         return json.depthBitTracker | (int256(1) << 255);
     }
 
     /**
      * @dev Converts an address to a string.
      */
-    function addressToString(address _address)
-        internal
-        pure
-        returns (string memory)
-    {
+    function addressToString(address _address) internal pure returns (string memory) {
         bytes memory lowercase = new bytes(40);
         uint160 currentAddressValue = uint160(_address);
 
@@ -523,8 +451,8 @@ library JsonWriter {
         bytes32 hashedAddress = keccak256(abi.encodePacked(lowercase));
 
         bytes memory buffer = new bytes(42);
-        buffer[0] = '0';
-        buffer[1] = 'x';
+        buffer[0] = "0";
+        buffer[1] = "x";
 
         uint160 addressValue = uint160(_address);
         uint160 hashValue = uint160(bytes20(hashedAddress));
@@ -532,8 +460,7 @@ library JsonWriter {
             uint256 hashIndex = hashValue & 0xf;
             if (hashIndex > 7) {
                 buffer[i] = HEX_CAPITAL[addressValue & 0xf];
-            }
-            else {
+            } else {
                 buffer[i] = HEX_DIGITS[addressValue & 0xf];
             }
             addressValue >>= 4;
@@ -557,7 +484,7 @@ library JsonWriter {
 
         if (i == type(int256).min) {
             // hard-coded since int256 min value can't be converted to unsigned
-            return "-57896044618658097711785492504343953926634992332820282019728792003956564819968"; 
+            return "-57896044618658097711785492504343953926634992332820282019728792003956564819968";
         }
 
         bool negative = i < 0;
@@ -569,7 +496,7 @@ library JsonWriter {
             j = uint256(-i);
             ++len; // make room for '-' sign
         }
-        
+
         uint256 l = j;
         while (j != 0) {
             len++;

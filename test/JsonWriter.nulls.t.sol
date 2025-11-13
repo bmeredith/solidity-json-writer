@@ -11,7 +11,7 @@ contract JsonWriterNullTest is Test {
         JsonWriter.Json memory json;
         json = json.writeNullValue();
 
-        assertEq(json.value, 'null');
+        assertEq(json.value, "null");
     }
 
     function test_writesArrayWithSingleNullValue() public pure {
@@ -20,7 +20,7 @@ contract JsonWriterNullTest is Test {
         json = json.writeNullValue();
         json = json.writeEndArray();
 
-        assertEq(json.value, '[null]');
+        assertEq(json.value, "[null]");
     }
 
     function test_writesArrayWithMultipleNullValues() public pure {
@@ -30,12 +30,12 @@ contract JsonWriterNullTest is Test {
         json = json.writeNullValue();
         json = json.writeEndArray();
 
-        assertEq(json.value, '[null,null]');
+        assertEq(json.value, "[null,null]");
     }
 
     function test_writesPropertyWithValueOfNull() public pure {
         JsonWriter.Json memory json;
-        json = json.writeNullProperty('prop');
+        json = json.writeNullProperty("prop");
 
         assertEq(json.value, '"prop": null');
     }
@@ -43,7 +43,7 @@ contract JsonWriterNullTest is Test {
     function test_writesObjectWithSinglePropertyAndNullValue() public pure {
         JsonWriter.Json memory json;
         json = json.writeStartObject();
-        json = json.writeNullProperty('prop');
+        json = json.writeNullProperty("prop");
         json = json.writeEndObject();
 
         assertEq(json.value, '{"prop": null}');
@@ -52,8 +52,8 @@ contract JsonWriterNullTest is Test {
     function test_writesObjectWithMultiplePropertiesAndNullValues() public pure {
         JsonWriter.Json memory json;
         json = json.writeStartObject();
-        json = json.writeNullProperty('prop1');
-        json = json.writeNullProperty('prop2');
+        json = json.writeNullProperty("prop1");
+        json = json.writeNullProperty("prop2");
         json = json.writeEndObject();
 
         assertEq(json.value, '{"prop1": null,"prop2": null}');
