@@ -85,8 +85,6 @@ JsonWriter supports the following Solidity primitives:
 
 Although the concept of `null` does not exist within Solidity, JsonWriter is capable of generating properties and values of `null`.
 
-The full API documentation for JsonWriter can be found in the [docs](docs/JsonWriter.md).
-
 ## License
 
 JsonWriter is released under the [MIT License](LICENSE).
