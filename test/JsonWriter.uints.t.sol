@@ -7,10 +7,28 @@ import {JsonWriter} from "../src/JsonWriter.sol";
 contract JsonWriterUintTest is Test {
     using JsonWriter for JsonWriter.Json;
 
-    function test_writesUintValueOf() public pure {
-        JsonWriter.Json memory json;
+    struct UintTestCase {
+        uint arg;
+        string expected;
+    }
 
-        assertEq(json.value, ' ');
+    function fixtureValues() public pure returns (UintTestCase[] memory) {
+        UintTestCase[] memory entries = new UintTestCase[](3);
+        entries[0] = UintTestCase(0, '0');
+        entries[1] = UintTestCase(1, '1');
+        entries[2] = UintTestCase(
+            115792089237316195423570985008687907853269984665640564039457584007913129639935, 
+            '115792089237316195423570985008687907853269984665640564039457584007913129639935'
+        );
+
+        return entries;
+    }
+
+    function table_writesUintValueOf(UintTestCase memory values) public pure {
+        JsonWriter.Json memory json;
+        json = json.writeUintValue(values.arg);
+
+        assertEq(json.value, values.expected);
     }
 
     function test_writesArrayWithSingleUintValue() public pure {
@@ -32,10 +50,23 @@ contract JsonWriterUintTest is Test {
         assertEq(json.value, '[1,2]');
     }
 
-    function test_writesUintPropertyOf() public pure {
-        JsonWriter.Json memory json;
+    function fixtureProperties() public pure returns (UintTestCase[] memory) {
+        UintTestCase[] memory entries = new UintTestCase[](3);
+        entries[0] = UintTestCase(0, '"prop": 0');
+        entries[1] = UintTestCase(1, '"prop": 1');
+        entries[2] = UintTestCase(
+            115792089237316195423570985008687907853269984665640564039457584007913129639935, 
+            '"prop": 115792089237316195423570985008687907853269984665640564039457584007913129639935'
+        );
 
-        assertEq(json.value, ' ');
+        return entries;
+    }
+
+    function table_writesUintPropertyOf(UintTestCase memory properties) public pure {
+        JsonWriter.Json memory json;
+        json = json.writeUintProperty('prop', properties.arg);
+
+        assertEq(json.value, properties.expected);
     }
 
     function test_writesObjectWithSingleUintPropertyAndValue() public pure {
