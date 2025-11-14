@@ -7,8 +7,6 @@ pragma solidity ^0.8.0;
  * @dev A library to generate RFC-7159 compliant JSON from within a smart contract.
  */
 library JsonWriter {
-    using JsonWriter for string;
-
     struct Json {
         int256 depthBitTracker;
         string value;
@@ -227,7 +225,7 @@ library JsonWriter {
     }
 
     /**
-     * @dev Writes the string text value (as a JSON string) as an element of a JSON array.
+     * @dev Writes the property name and string text value (as a JSON string) as part of a name/value pair of a JSON object.
      */
     function writeStringProperty(Json memory json, string memory propertyName, string memory value)
         internal
@@ -248,7 +246,7 @@ library JsonWriter {
     }
 
     /**
-     * @dev Writes the property name and string text value (as a JSON string) as part of a name/value pair of a JSON object.
+     * @dev Writes the string text value (as a JSON string) as an element of a JSON array.
      */
     function writeStringValue(Json memory json, string memory value) internal pure returns (Json memory) {
         string memory jsonEscapedString = escapeJsonString(value);
