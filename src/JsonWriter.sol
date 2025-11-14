@@ -14,14 +14,14 @@ library JsonWriter {
         string value;
     }
 
-    bytes1 constant BACKSLASH = bytes1(uint8(92));
-    bytes1 constant BACKSPACE = bytes1(uint8(8));
-    bytes1 constant CARRIAGE_RETURN = bytes1(uint8(13));
-    bytes1 constant DOUBLE_QUOTE = bytes1(uint8(34));
-    bytes1 constant FORM_FEED = bytes1(uint8(12));
-    bytes1 constant FRONTSLASH = bytes1(uint8(47));
-    bytes1 constant HORIZONTAL_TAB = bytes1(uint8(9));
-    bytes1 constant NEWLINE = bytes1(uint8(10));
+    bytes1 constant BACKSLASH = "\\";
+    bytes1 constant BACKSPACE = "\x08";
+    bytes1 constant CARRIAGE_RETURN = "\r";
+    bytes1 constant DOUBLE_QUOTE = '"';
+    bytes1 constant FORM_FEED = "\x0c";
+    bytes1 constant FORWARD_SLASH = "/";
+    bytes1 constant HORIZONTAL_TAB = "\t";
+    bytes1 constant NEWLINE = "\n";
 
     string constant TRUE = "true";
     string constant FALSE = "false";
@@ -29,7 +29,7 @@ library JsonWriter {
     bytes1 constant CLOSED_BRACE = "}";
     bytes1 constant OPEN_BRACKET = "[";
     bytes1 constant CLOSED_BRACKET = "]";
-    bytes1 constant LIST_SEPARATOR = ",";
+    bytes1 constant COMMA = ",";
 
     int256 constant MAX_INT256 = type(int256).max;
     bytes16 constant HEX_DIGITS = "0123456789abcdef";
@@ -87,7 +87,7 @@ library JsonWriter {
     {
         if (json.depthBitTracker < 0) {
             json.value = string(
-                abi.encodePacked(json.value, LIST_SEPARATOR, '"', propertyName, '": "', addressToString(value), '"')
+                abi.encodePacked(json.value, COMMA, '"', propertyName, '": "', addressToString(value), '"')
             );
         } else {
             json.value = string(abi.encodePacked(json.value, '"', propertyName, '": "', addressToString(value), '"'));
@@ -103,7 +103,7 @@ library JsonWriter {
      */
     function writeAddressValue(Json memory json, address value) internal pure returns (Json memory) {
         if (json.depthBitTracker < 0) {
-            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR, '"', addressToString(value), '"'));
+            json.value = string(abi.encodePacked(json.value, COMMA, '"', addressToString(value), '"'));
         } else {
             json.value = string(abi.encodePacked(json.value, '"', addressToString(value), '"'));
         }
@@ -129,7 +129,7 @@ library JsonWriter {
         }
 
         if (json.depthBitTracker < 0) {
-            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR, '"', propertyName, '": ', strValue));
+            json.value = string(abi.encodePacked(json.value, COMMA, '"', propertyName, '": ', strValue));
         } else {
             json.value = string(abi.encodePacked(json.value, '"', propertyName, '": ', strValue));
         }
@@ -151,7 +151,7 @@ library JsonWriter {
         }
 
         if (json.depthBitTracker < 0) {
-            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR, strValue));
+            json.value = string(abi.encodePacked(json.value, COMMA, strValue));
         } else {
             json.value = string(abi.encodePacked(json.value, strValue));
         }
@@ -171,7 +171,7 @@ library JsonWriter {
     {
         if (json.depthBitTracker < 0) {
             json.value =
-                string(abi.encodePacked(json.value, LIST_SEPARATOR, '"', propertyName, '": ', intToString(value)));
+                string(abi.encodePacked(json.value, COMMA, '"', propertyName, '": ', intToString(value)));
         } else {
             json.value = string(abi.encodePacked(json.value, '"', propertyName, '": ', intToString(value)));
         }
@@ -186,7 +186,7 @@ library JsonWriter {
      */
     function writeIntValue(Json memory json, int256 value) internal pure returns (Json memory) {
         if (json.depthBitTracker < 0) {
-            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR, intToString(value)));
+            json.value = string(abi.encodePacked(json.value, COMMA, intToString(value)));
         } else {
             json.value = string(abi.encodePacked(json.value, intToString(value)));
         }
@@ -201,7 +201,7 @@ library JsonWriter {
      */
     function writeNullProperty(Json memory json, string memory propertyName) internal pure returns (Json memory) {
         if (json.depthBitTracker < 0) {
-            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR, '"', propertyName, '": null'));
+            json.value = string(abi.encodePacked(json.value, COMMA, '"', propertyName, '": null'));
         } else {
             json.value = string(abi.encodePacked(json.value, '"', propertyName, '": null'));
         }
@@ -216,7 +216,7 @@ library JsonWriter {
      */
     function writeNullValue(Json memory json) internal pure returns (Json memory) {
         if (json.depthBitTracker < 0) {
-            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR, "null"));
+            json.value = string(abi.encodePacked(json.value, COMMA, "null"));
         } else {
             json.value = string(abi.encodePacked(json.value, "null"));
         }
@@ -237,7 +237,7 @@ library JsonWriter {
         string memory jsonEscapedString = escapeJsonString(value);
         if (json.depthBitTracker < 0) {
             json.value =
-                string(abi.encodePacked(json.value, LIST_SEPARATOR, '"', propertyName, '": "', jsonEscapedString, '"'));
+                string(abi.encodePacked(json.value, COMMA, '"', propertyName, '": "', jsonEscapedString, '"'));
         } else {
             json.value = string(abi.encodePacked(json.value, '"', propertyName, '": "', jsonEscapedString, '"'));
         }
@@ -253,7 +253,7 @@ library JsonWriter {
     function writeStringValue(Json memory json, string memory value) internal pure returns (Json memory) {
         string memory jsonEscapedString = escapeJsonString(value);
         if (json.depthBitTracker < 0) {
-            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR, '"', jsonEscapedString, '"'));
+            json.value = string(abi.encodePacked(json.value, COMMA, '"', jsonEscapedString, '"'));
         } else {
             json.value = string(abi.encodePacked(json.value, '"', jsonEscapedString, '"'));
         }
@@ -273,7 +273,7 @@ library JsonWriter {
     {
         if (json.depthBitTracker < 0) {
             json.value =
-                string(abi.encodePacked(json.value, LIST_SEPARATOR, '"', propertyName, '": ', uintToString(value)));
+                string(abi.encodePacked(json.value, COMMA, '"', propertyName, '": ', uintToString(value)));
         } else {
             json.value = string(abi.encodePacked(json.value, '"', propertyName, '": ', uintToString(value)));
         }
@@ -288,7 +288,7 @@ library JsonWriter {
      */
     function writeUintValue(Json memory json, uint256 value) internal pure returns (Json memory) {
         if (json.depthBitTracker < 0) {
-            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR, uintToString(value)));
+            json.value = string(abi.encodePacked(json.value, COMMA, uintToString(value)));
         } else {
             json.value = string(abi.encodePacked(json.value, uintToString(value)));
         }
@@ -303,7 +303,7 @@ library JsonWriter {
      */
     function writeStart(Json memory json, bytes1 token) private pure returns (Json memory) {
         if (json.depthBitTracker < 0) {
-            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR, token));
+            json.value = string(abi.encodePacked(json.value, COMMA, token));
         } else {
             json.value = string(abi.encodePacked(json.value, token));
         }
@@ -319,7 +319,7 @@ library JsonWriter {
      */
     function writeStart(Json memory json, string memory propertyName, bytes1 token) private pure returns (Json memory) {
         if (json.depthBitTracker < 0) {
-            json.value = string(abi.encodePacked(json.value, LIST_SEPARATOR, '"', propertyName, '": ', token));
+            json.value = string(abi.encodePacked(json.value, COMMA, '"', propertyName, '": ', token));
         } else {
             json.value = string(abi.encodePacked(json.value, '"', propertyName, '": ', token));
         }
@@ -358,7 +358,7 @@ library JsonWriter {
             } else if (b[i] == DOUBLE_QUOTE) {
                 foundEscapeChars = true;
                 break;
-            } else if (b[i] == FRONTSLASH) {
+            } else if (b[i] == FORWARD_SLASH) {
                 foundEscapeChars = true;
                 break;
             } else if (b[i] == HORIZONTAL_TAB) {
@@ -392,7 +392,7 @@ library JsonWriter {
                 str = string(abi.encodePacked(str, "\\\\"));
             } else if (b[i] == DOUBLE_QUOTE) {
                 str = string(abi.encodePacked(str, '\\"'));
-            } else if (b[i] == FRONTSLASH) {
+            } else if (b[i] == FORWARD_SLASH) {
                 str = string(abi.encodePacked(str, "\\/"));
             } else if (b[i] == HORIZONTAL_TAB) {
                 str = string(abi.encodePacked(str, "\\t"));
