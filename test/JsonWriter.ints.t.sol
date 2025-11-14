@@ -33,7 +33,7 @@ contract JsonWriterIntTest is Test {
         JsonWriter.Json memory json;
         json = json.writeIntValue(values.arg);
 
-        assertEq(json.value, values.expected);
+        assertEq(json.toString(), values.expected);
     }
 
     function test_writesArrayWithSingleIntValue() public pure {
@@ -42,7 +42,7 @@ contract JsonWriterIntTest is Test {
         json = json.writeIntValue(-1);
         json = json.writeEndArray();
 
-        assertEq(json.value, "[-1]");
+        assertEq(json.toString(), "[-1]");
     }
 
     function test_writesArrayWithMultipleIntValues() public pure {
@@ -52,7 +52,7 @@ contract JsonWriterIntTest is Test {
         json = json.writeIntValue(1);
         json = json.writeEndArray();
 
-        assertEq(json.value, "[-1,1]");
+        assertEq(json.toString(), "[-1,1]");
     }
 
     function fixtureProperties() public pure returns (IntTestCase[] memory) {
@@ -76,7 +76,7 @@ contract JsonWriterIntTest is Test {
         JsonWriter.Json memory json;
         json = json.writeIntProperty("prop", properties.arg);
 
-        assertEq(json.value, properties.expected);
+        assertEq(json.toString(), properties.expected);
     }
 
     function test_writesObjectWithSingleIntPropertyAndValue() public pure {
@@ -85,7 +85,7 @@ contract JsonWriterIntTest is Test {
         json = json.writeIntProperty("prop", -1);
         json = json.writeEndObject();
 
-        assertEq(json.value, '{"prop": -1}');
+        assertEq(json.toString(), '{"prop": -1}');
     }
 
     function test_writesObjectWithMultipleIntPropertiesAndValues() public pure {
@@ -95,6 +95,6 @@ contract JsonWriterIntTest is Test {
         json = json.writeIntProperty("prop2", 1);
         json = json.writeEndObject();
 
-        assertEq(json.value, '{"prop1": -1,"prop2": 1}');
+        assertEq(json.toString(), '{"prop1": -1,"prop2": 1}');
     }
 }

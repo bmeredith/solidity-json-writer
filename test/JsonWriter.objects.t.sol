@@ -12,7 +12,7 @@ contract JsonWriterObjectTest is Test {
         json = json.writeStartObject();
         json = json.writeEndObject();
 
-        assertEq(json.value, "{}");
+        assertEq(json.toString(), "{}");
     }
 
     function test_writesObjectWithAnArrayProperty() public pure {
@@ -22,6 +22,6 @@ contract JsonWriterObjectTest is Test {
         json = json.writeEndArray();
         json = json.writeEndObject();
 
-        assertEq(json.value, '{"prop": []}');
+        assertEq(json.toString(), '{"prop": []}');
     }
 }

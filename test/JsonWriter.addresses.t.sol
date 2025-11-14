@@ -32,7 +32,7 @@ contract JsonWriterAddressTest is Test {
         JsonWriter.Json memory json;
         json = json.writeAddressValue(values.arg);
 
-        assertEq(json.value, values.expected);
+        assertEq(json.toString(), values.expected);
     }
 
     function test_writesArrayWithSingleAddressValue() public pure {
@@ -41,7 +41,7 @@ contract JsonWriterAddressTest is Test {
         json = json.writeAddressValue(0x1111111111111111111111111111111111111111);
         json = json.writeEndArray();
 
-        assertEq(json.value, '["0x1111111111111111111111111111111111111111"]');
+        assertEq(json.toString(), '["0x1111111111111111111111111111111111111111"]');
     }
 
     function test_writesArrayWithMultipleAddressValues() public pure {
@@ -52,7 +52,7 @@ contract JsonWriterAddressTest is Test {
         json = json.writeEndArray();
 
         assertEq(
-            json.value, '["0x1111111111111111111111111111111111111111","0x2222222222222222222222222222222222222222"]'
+            json.toString(), '["0x1111111111111111111111111111111111111111","0x2222222222222222222222222222222222222222"]'
         );
     }
 
@@ -81,7 +81,7 @@ contract JsonWriterAddressTest is Test {
         JsonWriter.Json memory json;
         json = json.writeAddressProperty("prop", properties.arg);
 
-        assertEq(json.value, properties.expected);
+        assertEq(json.toString(), properties.expected);
     }
 
     function test_writesObjectWithSingleAddressPropertyAndValue() public pure {
@@ -90,7 +90,7 @@ contract JsonWriterAddressTest is Test {
         json = json.writeAddressProperty("prop", 0x1111111111111111111111111111111111111111);
         json = json.writeEndObject();
 
-        assertEq(json.value, '{"prop": "0x1111111111111111111111111111111111111111"}');
+        assertEq(json.toString(), '{"prop": "0x1111111111111111111111111111111111111111"}');
     }
 
     function test_writesObjectWithMultipleAddressPropertiesAndValues() public pure {
@@ -101,7 +101,7 @@ contract JsonWriterAddressTest is Test {
         json = json.writeEndObject();
 
         assertEq(
-            json.value,
+            json.toString(),
             '{"prop1": "0x1111111111111111111111111111111111111111","prop2": "0x2222222222222222222222222222222222222222"}'
         );
     }

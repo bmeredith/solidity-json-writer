@@ -25,7 +25,7 @@ contract JsonWriterStringTest is Test {
         JsonWriter.Json memory json;
         json = json.writeStringValue(values.arg);
 
-        assertEq(json.value, values.expected);
+        assertEq(json.toString(), values.expected);
     }
 
     function test_writesArrayWithSingleStringValue() public pure {
@@ -34,7 +34,7 @@ contract JsonWriterStringTest is Test {
         json = json.writeStringValue("test");
         json = json.writeEndArray();
 
-        assertEq(json.value, '["test"]');
+        assertEq(json.toString(), '["test"]');
     }
 
     function test_writesArrayWithMultipleStringValues() public pure {
@@ -44,7 +44,7 @@ contract JsonWriterStringTest is Test {
         json = json.writeStringValue("test");
         json = json.writeEndArray();
 
-        assertEq(json.value, '["test","test"]');
+        assertEq(json.toString(), '["test","test"]');
     }
 
     function fixtureProperties() public pure returns (StringTestCase[] memory) {
@@ -60,7 +60,7 @@ contract JsonWriterStringTest is Test {
         JsonWriter.Json memory json;
         json = json.writeStringProperty("prop", properties.arg);
 
-        assertEq(json.value, properties.expected);
+        assertEq(json.toString(), properties.expected);
     }
 
     function test_writesObjectWithSingleStringPropertyAndValue() public pure {
@@ -69,7 +69,7 @@ contract JsonWriterStringTest is Test {
         json = json.writeStringProperty("prop", "value");
         json = json.writeEndObject();
 
-        assertEq(json.value, '{"prop": "value"}');
+        assertEq(json.toString(), '{"prop": "value"}');
     }
 
     function test_writesObjectWithMultipleStringPropertiesAndValues() public pure {
@@ -79,7 +79,7 @@ contract JsonWriterStringTest is Test {
         json = json.writeStringProperty("prop2", "value2");
         json = json.writeEndObject();
 
-        assertEq(json.value, '{"prop1": "value1","prop2": "value2"}');
+        assertEq(json.toString(), '{"prop1": "value1","prop2": "value2"}');
     }
 
     function fixtureEscapeChars() public pure returns (StringTestCase[] memory) {
@@ -100,6 +100,6 @@ contract JsonWriterStringTest is Test {
         JsonWriter.Json memory json;
         json = json.writeStringValue(escapeChars.arg);
 
-        assertEq(json.value, escapeChars.expected);
+        assertEq(json.toString(), escapeChars.expected);
     }
 }

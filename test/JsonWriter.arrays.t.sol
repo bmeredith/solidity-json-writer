@@ -12,7 +12,7 @@ contract JsonWriterArrayTest is Test {
         json = json.writeStartArray();
         json = json.writeEndArray();
 
-        assertEq(json.value, "[]");
+        assertEq(json.toString(), "[]");
     }
 
     function test_writesArrayWithinArray() public pure {
@@ -22,7 +22,7 @@ contract JsonWriterArrayTest is Test {
         json = json.writeEndArray();
         json = json.writeEndArray();
 
-        assertEq(json.value, "[[]]");
+        assertEq(json.toString(), "[[]]");
     }
 
     function test_writesMultipleArraysWithinAnArray() public pure {
@@ -34,7 +34,7 @@ contract JsonWriterArrayTest is Test {
         json = json.writeEndArray();
         json = json.writeEndArray();
 
-        assertEq(json.value, "[[],[]]");
+        assertEq(json.toString(), "[[],[]]");
     }
 
     function test_writesArrayWithNestedObject() public pure {
@@ -44,7 +44,7 @@ contract JsonWriterArrayTest is Test {
         json = json.writeEndObject();
         json = json.writeEndArray();
 
-        assertEq(json.value, "[{}]");
+        assertEq(json.toString(), "[{}]");
     }
 
     function test_writesArrayWithMultipleNestedObjects() public pure {
@@ -56,6 +56,6 @@ contract JsonWriterArrayTest is Test {
         json = json.writeEndObject();
         json = json.writeEndArray();
 
-        assertEq(json.value, "[{},{}]");
+        assertEq(json.toString(), "[{},{}]");
     }
 }
