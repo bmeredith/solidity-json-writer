@@ -9,53 +9,63 @@ contract JsonWriterArrayTest is Test {
 
     function test_writesEmptyArrayForInitialJSONString() public pure {
         JsonWriter.Json memory json;
-        json = json.writeStartArray();
-        json = json.writeEndArray();
+        string memory output = json
+            .writeStartArray()
+            .writeEndArray()
+            .toString();
 
-        assertEq(json.toString(), "[]");
+        assertEq(output, "[]");
     }
 
     function test_writesArrayWithinArray() public pure {
         JsonWriter.Json memory json;
-        json = json.writeStartArray();
-        json = json.writeStartArray();
-        json = json.writeEndArray();
-        json = json.writeEndArray();
+        string memory output = json
+            .writeStartArray()
+                .writeStartArray()
+                .writeEndArray()
+            .writeEndArray()
+            .toString();
 
-        assertEq(json.toString(), "[[]]");
+        assertEq(output, "[[]]");
     }
 
     function test_writesMultipleArraysWithinAnArray() public pure {
         JsonWriter.Json memory json;
-        json = json.writeStartArray();
-        json = json.writeStartArray();
-        json = json.writeEndArray();
-        json = json.writeStartArray();
-        json = json.writeEndArray();
-        json = json.writeEndArray();
+        string memory output = json
+            .writeStartArray()
+                .writeStartArray()
+                .writeEndArray()
+                .writeStartArray()
+                .writeEndArray()
+            .writeEndArray()
+            .toString();
 
-        assertEq(json.toString(), "[[],[]]");
+        assertEq(output, "[[],[]]");
     }
 
     function test_writesArrayWithNestedObject() public pure {
         JsonWriter.Json memory json;
-        json = json.writeStartArray();
-        json = json.writeStartObject();
-        json = json.writeEndObject();
-        json = json.writeEndArray();
+        string memory output = json
+            .writeStartArray()
+                .writeStartObject()
+                .writeEndObject()
+            .writeEndArray()
+            .toString();
 
-        assertEq(json.toString(), "[{}]");
+        assertEq(output, "[{}]");
     }
 
     function test_writesArrayWithMultipleNestedObjects() public pure {
         JsonWriter.Json memory json;
-        json = json.writeStartArray();
-        json = json.writeStartObject();
-        json = json.writeEndObject();
-        json = json.writeStartObject();
-        json = json.writeEndObject();
-        json = json.writeEndArray();
+        string memory output = json
+            .writeStartArray()
+                .writeStartObject()
+                .writeEndObject()
+                .writeStartObject()
+                .writeEndObject()
+            .writeEndArray()
+            .toString();
 
-        assertEq(json.toString(), "[{},{}]");
+        assertEq(output, "[{},{}]");
     }
 }

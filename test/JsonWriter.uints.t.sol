@@ -26,28 +26,34 @@ contract JsonWriterUintTest is Test {
 
     function table_writesUintValueOf(UintTestCase memory values) public pure {
         JsonWriter.Json memory json;
-        json = json.writeUintValue(values.arg);
+        string memory output = json
+            .writeUintValue(values.arg)
+            .toString();
 
-        assertEq(json.toString(), values.expected);
+        assertEq(output, values.expected);
     }
 
     function test_writesArrayWithSingleUintValue() public pure {
         JsonWriter.Json memory json;
-        json = json.writeStartArray();
-        json = json.writeUintValue(1);
-        json = json.writeEndArray();
+        string memory output = json
+            .writeStartArray()
+                .writeUintValue(1)
+            .writeEndArray()
+            .toString();
 
-        assertEq(json.toString(), "[1]");
+        assertEq(output, "[1]");
     }
 
     function test_writesArrayWithMultipleUintValues() public pure {
         JsonWriter.Json memory json;
-        json = json.writeStartArray();
-        json = json.writeUintValue(1);
-        json = json.writeUintValue(2);
-        json = json.writeEndArray();
+        string memory output = json
+            .writeStartArray()
+                .writeUintValue(1)
+                .writeUintValue(2)
+            .writeEndArray()
+            .toString();
 
-        assertEq(json.toString(), "[1,2]");
+        assertEq(output, "[1,2]");
     }
 
     function fixtureProperties() public pure returns (UintTestCase[] memory) {
@@ -64,27 +70,33 @@ contract JsonWriterUintTest is Test {
 
     function table_writesUintPropertyOf(UintTestCase memory properties) public pure {
         JsonWriter.Json memory json;
-        json = json.writeUintProperty("prop", properties.arg);
+        string memory output = json
+            .writeUintProperty("prop", properties.arg)
+            .toString();
 
-        assertEq(json.toString(), properties.expected);
+        assertEq(output, properties.expected);
     }
 
     function test_writesObjectWithSingleUintPropertyAndValue() public pure {
         JsonWriter.Json memory json;
-        json = json.writeStartObject();
-        json = json.writeUintProperty("prop", 1);
-        json = json.writeEndObject();
+        string memory output = json
+            .writeStartObject()
+                .writeUintProperty("prop", 1)
+            .writeEndObject()
+            .toString();
 
-        assertEq(json.toString(), '{"prop": 1}');
+        assertEq(output, '{"prop": 1}');
     }
 
     function test_writesObjectWithMultipleUintPropertiesAndValues() public pure {
         JsonWriter.Json memory json;
-        json = json.writeStartObject();
-        json = json.writeIntProperty("prop1", 1);
-        json = json.writeIntProperty("prop2", 2);
-        json = json.writeEndObject();
+        string memory output = json
+            .writeStartObject()
+                .writeIntProperty("prop1", 1)
+                .writeIntProperty("prop2", 2)
+            .writeEndObject()
+            .toString();
 
-        assertEq(json.toString(), '{"prop1": 1,"prop2": 2}');
+        assertEq(output, '{"prop1": 1,"prop2": 2}');
     }
 }

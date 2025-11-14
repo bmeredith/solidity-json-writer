@@ -23,28 +23,34 @@ contract JsonWriterStringTest is Test {
 
     function table_writesStringValueOf(StringTestCase memory values) public pure {
         JsonWriter.Json memory json;
-        json = json.writeStringValue(values.arg);
+        string memory output = json
+            .writeStringValue(values.arg)
+            .toString();
 
-        assertEq(json.toString(), values.expected);
+        assertEq(output, values.expected);
     }
 
     function test_writesArrayWithSingleStringValue() public pure {
         JsonWriter.Json memory json;
-        json = json.writeStartArray();
-        json = json.writeStringValue("test");
-        json = json.writeEndArray();
+        string memory output = json
+            .writeStartArray()
+                .writeStringValue("test")
+            .writeEndArray()
+            .toString();
 
-        assertEq(json.toString(), '["test"]');
+        assertEq(output, '["test"]');
     }
 
     function test_writesArrayWithMultipleStringValues() public pure {
         JsonWriter.Json memory json;
-        json = json.writeStartArray();
-        json = json.writeStringValue("test");
-        json = json.writeStringValue("test");
-        json = json.writeEndArray();
+        string memory output = json
+            .writeStartArray()
+                .writeStringValue("test")
+                .writeStringValue("test")
+            .writeEndArray()
+            .toString();
 
-        assertEq(json.toString(), '["test","test"]');
+        assertEq(output, '["test","test"]');
     }
 
     function fixtureProperties() public pure returns (StringTestCase[] memory) {
@@ -58,28 +64,34 @@ contract JsonWriterStringTest is Test {
 
     function table_writesStringPropertyOf(StringTestCase memory properties) public pure {
         JsonWriter.Json memory json;
-        json = json.writeStringProperty("prop", properties.arg);
+        string memory output = json
+            .writeStringProperty("prop", properties.arg)
+            .toString();
 
-        assertEq(json.toString(), properties.expected);
+        assertEq(output, properties.expected);
     }
 
     function test_writesObjectWithSingleStringPropertyAndValue() public pure {
         JsonWriter.Json memory json;
-        json = json.writeStartObject();
-        json = json.writeStringProperty("prop", "value");
-        json = json.writeEndObject();
+        string memory output = json
+            .writeStartObject()
+                .writeStringProperty("prop", "value")
+            .writeEndObject()
+            .toString();
 
-        assertEq(json.toString(), '{"prop": "value"}');
+        assertEq(output, '{"prop": "value"}');
     }
 
     function test_writesObjectWithMultipleStringPropertiesAndValues() public pure {
         JsonWriter.Json memory json;
-        json = json.writeStartObject();
-        json = json.writeStringProperty("prop1", "value1");
-        json = json.writeStringProperty("prop2", "value2");
-        json = json.writeEndObject();
+        string memory output = json
+            .writeStartObject()
+                .writeStringProperty("prop1", "value1")
+                .writeStringProperty("prop2", "value2")
+            .writeEndObject()
+            .toString();
 
-        assertEq(json.toString(), '{"prop1": "value1","prop2": "value2"}');
+        assertEq(output, '{"prop1": "value1","prop2": "value2"}');
     }
 
     function fixtureEscapeChars() public pure returns (StringTestCase[] memory) {
@@ -98,8 +110,10 @@ contract JsonWriterStringTest is Test {
 
     function table_escapesChars(StringTestCase memory escapeChars) public pure {
         JsonWriter.Json memory json;
-        json = json.writeStringValue(escapeChars.arg);
+        string memory output = json
+            .writeStringValue(escapeChars.arg)
+            .toString();
 
-        assertEq(json.toString(), escapeChars.expected);
+        assertEq(output, escapeChars.expected);
     }
 }

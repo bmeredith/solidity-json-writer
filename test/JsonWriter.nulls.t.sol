@@ -9,53 +9,65 @@ contract JsonWriterNullTest is Test {
 
     function test_writesNullValue() public pure {
         JsonWriter.Json memory json;
-        json = json.writeNullValue();
+        string memory output = json
+            .writeNullValue()
+            .toString();
 
-        assertEq(json.toString(), "null");
+        assertEq(output, "null");
     }
 
     function test_writesArrayWithSingleNullValue() public pure {
         JsonWriter.Json memory json;
-        json = json.writeStartArray();
-        json = json.writeNullValue();
-        json = json.writeEndArray();
+        string memory output = json
+            .writeStartArray()
+                .writeNullValue()
+            .writeEndArray()
+            .toString();
 
-        assertEq(json.toString(), "[null]");
+        assertEq(output, "[null]");
     }
 
     function test_writesArrayWithMultipleNullValues() public pure {
         JsonWriter.Json memory json;
-        json = json.writeStartArray();
-        json = json.writeNullValue();
-        json = json.writeNullValue();
-        json = json.writeEndArray();
+        string memory output = json
+            .writeStartArray()
+                .writeNullValue()
+                .writeNullValue()
+            .writeEndArray()
+            .toString();
 
-        assertEq(json.toString(), "[null,null]");
+        assertEq(output, "[null,null]");
     }
 
     function test_writesPropertyWithValueOfNull() public pure {
         JsonWriter.Json memory json;
-        json = json.writeNullProperty("prop");
+        string memory output = json
+            .writeNullProperty("prop")
+            .toString();
 
-        assertEq(json.toString(), '"prop": null');
+        assertEq(output, '"prop": null');
     }
 
     function test_writesObjectWithSinglePropertyAndNullValue() public pure {
         JsonWriter.Json memory json;
-        json = json.writeStartObject();
-        json = json.writeNullProperty("prop");
-        json = json.writeEndObject();
+        string memory output = json
+            .writeStartObject()
+                .writeNullProperty("prop")
+            .writeEndObject()
+            .toString();
 
-        assertEq(json.toString(), '{"prop": null}');
+        assertEq(output, '{"prop": null}');
     }
 
     function test_writesObjectWithMultiplePropertiesAndNullValues() public pure {
         JsonWriter.Json memory json;
-        json = json.writeStartObject();
-        json = json.writeNullProperty("prop1");
-        json = json.writeNullProperty("prop2");
-        json = json.writeEndObject();
+        string memory output = json
+            .writeStartObject()
+                .writeNullProperty("prop1")
+                .writeNullProperty("prop2")
+            .writeEndObject()
+            .toString();
 
-        assertEq(json.toString(), '{"prop1": null,"prop2": null}');
+        assertEq(output, '{"prop1": null,"prop2": null}');
     }
 }

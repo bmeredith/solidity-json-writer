@@ -9,67 +9,83 @@ contract JsonWriterBooleanTest is Test {
 
     function test_writesBooleanValueOfTrue() public pure {
         JsonWriter.Json memory json;
-        json = json.writeBooleanValue(true);
+        string memory output = json
+            .writeBooleanValue(true)
+            .toString();
 
-        assertEq(json.toString(), "true");
+        assertEq(output, "true");
     }
 
     function test_writesBooleanValueOfFalse() public pure {
         JsonWriter.Json memory json;
-        json = json.writeBooleanValue(false);
+        string memory output = json
+            .writeBooleanValue(false)
+            .toString();
 
-        assertEq(json.toString(), "false");
+        assertEq(output, "false");
     }
 
     function test_writesArrayWithSingleBooleanValue() public pure {
         JsonWriter.Json memory json;
-        json = json.writeStartArray();
-        json = json.writeBooleanValue(true);
-        json = json.writeEndArray();
+        string memory output = json
+            .writeStartArray()
+                .writeBooleanValue(true)
+            .writeEndArray()
+            .toString();
 
-        assertEq(json.toString(), "[true]");
+        assertEq(output, "[true]");
     }
 
     function test_writesArrayWithMultipleBooleanValues() public pure {
         JsonWriter.Json memory json;
-        json = json.writeStartArray();
-        json = json.writeBooleanValue(true);
-        json = json.writeBooleanValue(true);
-        json = json.writeEndArray();
+        string memory output = json
+            .writeStartArray()
+                .writeBooleanValue(true)
+                .writeBooleanValue(true)
+            .writeEndArray()
+            .toString();
 
-        assertEq(json.toString(), "[true,true]");
+        assertEq(output, "[true,true]");
     }
 
     function test_writesBooleanPropertyOfTrue() public pure {
         JsonWriter.Json memory json;
-        json = json.writeBooleanProperty("prop", true);
+        string memory output = json
+            .writeBooleanProperty("prop", true)
+            .toString();
 
-        assertEq(json.toString(), '"prop": true');
+        assertEq(output, '"prop": true');
     }
 
     function test_writesBooleanPropertyOfFalse() public pure {
         JsonWriter.Json memory json;
-        json = json.writeBooleanProperty("prop", false);
+        string memory output = json
+            .writeBooleanProperty("prop", false)
+            .toString();
 
-        assertEq(json.toString(), '"prop": false');
+        assertEq(output, '"prop": false');
     }
 
     function test_writesObjectWithSingleBooleanPropertyAndValue() public pure {
         JsonWriter.Json memory json;
-        json = json.writeStartObject();
-        json = json.writeBooleanProperty("prop", true);
-        json = json.writeEndObject();
+        string memory output = json
+            .writeStartObject()
+                .writeBooleanProperty("prop", true)
+            .writeEndObject()
+            .toString();
 
-        assertEq(json.toString(), '{"prop": true}');
+        assertEq(output, '{"prop": true}');
     }
 
     function test_writesObjectyWithMultipleBooleanPropertiesAndValues() public pure {
         JsonWriter.Json memory json;
-        json = json.writeStartObject();
-        json = json.writeBooleanProperty("prop1", true);
-        json = json.writeBooleanProperty("prop2", true);
-        json = json.writeEndObject();
+        string memory output = json
+            .writeStartObject()
+                .writeBooleanProperty("prop1", true)
+                .writeBooleanProperty("prop2", true)
+            .writeEndObject()
+            .toString();
 
-        assertEq(json.toString(), '{"prop1": true,"prop2": true}');
+        assertEq(output, '{"prop1": true,"prop2": true}');
     }
 }

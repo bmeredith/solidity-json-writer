@@ -30,29 +30,35 @@ contract JsonWriterAddressTest is Test {
 
     function table_writesAddressValueOf(AddressTestCase memory values) public pure {
         JsonWriter.Json memory json;
-        json = json.writeAddressValue(values.arg);
+        string memory output = json
+            .writeAddressValue(values.arg)
+            .toString();
 
-        assertEq(json.toString(), values.expected);
+        assertEq(output, values.expected);
     }
 
     function test_writesArrayWithSingleAddressValue() public pure {
         JsonWriter.Json memory json;
-        json = json.writeStartArray();
-        json = json.writeAddressValue(0x1111111111111111111111111111111111111111);
-        json = json.writeEndArray();
+        string memory output = json
+            .writeStartArray()
+                .writeAddressValue(0x1111111111111111111111111111111111111111)
+            .writeEndArray()
+            .toString();
 
-        assertEq(json.toString(), '["0x1111111111111111111111111111111111111111"]');
+        assertEq(output, '["0x1111111111111111111111111111111111111111"]');
     }
 
     function test_writesArrayWithMultipleAddressValues() public pure {
         JsonWriter.Json memory json;
-        json = json.writeStartArray();
-        json = json.writeAddressValue(0x1111111111111111111111111111111111111111);
-        json = json.writeAddressValue(0x2222222222222222222222222222222222222222);
-        json = json.writeEndArray();
+        string memory output = json
+            .writeStartArray()
+                .writeAddressValue(0x1111111111111111111111111111111111111111)
+                .writeAddressValue(0x2222222222222222222222222222222222222222)
+            .writeEndArray()
+            .toString();
 
         assertEq(
-            json.toString(), '["0x1111111111111111111111111111111111111111","0x2222222222222222222222222222222222222222"]'
+            output, '["0x1111111111111111111111111111111111111111","0x2222222222222222222222222222222222222222"]'
         );
     }
 
@@ -79,29 +85,35 @@ contract JsonWriterAddressTest is Test {
 
     function table_writesAddressPropertyOf(AddressTestCase memory properties) public pure {
         JsonWriter.Json memory json;
-        json = json.writeAddressProperty("prop", properties.arg);
+        string memory output = json
+            .writeAddressProperty("prop", properties.arg)
+            .toString();
 
-        assertEq(json.toString(), properties.expected);
+        assertEq(output, properties.expected);
     }
 
     function test_writesObjectWithSingleAddressPropertyAndValue() public pure {
         JsonWriter.Json memory json;
-        json = json.writeStartObject();
-        json = json.writeAddressProperty("prop", 0x1111111111111111111111111111111111111111);
-        json = json.writeEndObject();
+        string memory output = json
+            .writeStartObject()
+                .writeAddressProperty("prop", 0x1111111111111111111111111111111111111111)
+            .writeEndObject()
+            .toString();
 
-        assertEq(json.toString(), '{"prop": "0x1111111111111111111111111111111111111111"}');
+        assertEq(output, '{"prop": "0x1111111111111111111111111111111111111111"}');
     }
 
     function test_writesObjectWithMultipleAddressPropertiesAndValues() public pure {
         JsonWriter.Json memory json;
-        json = json.writeStartObject();
-        json = json.writeAddressProperty("prop1", 0x1111111111111111111111111111111111111111);
-        json = json.writeAddressProperty("prop2", 0x2222222222222222222222222222222222222222);
-        json = json.writeEndObject();
+        string memory output = json
+            .writeStartObject()
+                .writeAddressProperty("prop1", 0x1111111111111111111111111111111111111111)
+                .writeAddressProperty("prop2", 0x2222222222222222222222222222222222222222)
+            .writeEndObject()
+            .toString();
 
         assertEq(
-            json.toString(),
+            output,
             '{"prop1": "0x1111111111111111111111111111111111111111","prop2": "0x2222222222222222222222222222222222222222"}'
         );
     }

@@ -9,19 +9,23 @@ contract JsonWriterObjectTest is Test {
 
     function test_writesEmptyObjectForInitialJSONString() public pure {
         JsonWriter.Json memory json;
-        json = json.writeStartObject();
-        json = json.writeEndObject();
+        string memory output = json
+            .writeStartObject()
+            .writeEndObject()
+            .toString();
 
-        assertEq(json.toString(), "{}");
+        assertEq(output, "{}");
     }
 
     function test_writesObjectWithAnArrayProperty() public pure {
         JsonWriter.Json memory json;
-        json = json.writeStartObject();
-        json = json.writeStartArray("prop");
-        json = json.writeEndArray();
-        json = json.writeEndObject();
+        string memory output = json
+            .writeStartObject()
+                .writeStartArray("prop")
+                .writeEndArray()
+            .writeEndObject()
+            .toString();
 
-        assertEq(json.toString(), '{"prop": []}');
+        assertEq(output, '{"prop": []}');
     }
 }
