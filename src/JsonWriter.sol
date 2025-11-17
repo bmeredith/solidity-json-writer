@@ -7,6 +7,8 @@ pragma solidity ^0.8.0;
  * @dev A library to generate RFC-7159 compliant JSON from within a smart contract.
  */
 library JsonWriter {
+    error UnbalancedJSON();
+
     struct Json {
         int256 depthBitTracker;
         bytes buffer;
@@ -17,7 +19,6 @@ library JsonWriter {
     bytes1 constant CARRIAGE_RETURN = "\r";
     bytes1 constant DOUBLE_QUOTE = '"';
     bytes1 constant FORM_FEED = "\x0c";
-    bytes1 constant FORWARD_SLASH = "/";
     bytes1 constant HORIZONTAL_TAB = "\t";
     bytes1 constant NEWLINE = "\n";
 
@@ -83,7 +84,7 @@ library JsonWriter {
         pure
         returns (Json memory)
     {
-        bytes memory addr = bytes(addressToString(value));
+        string memory addr = addressToString(value);
         if (json.depthBitTracker < 0) {
             json.buffer = abi.encodePacked(json.buffer, COMMA, '"', propertyName, '": "', addr, '"');
         } else {
@@ -98,7 +99,7 @@ library JsonWriter {
      * @dev Writes the address value (as a JSON string) as an element of a JSON array.
      */
     function writeAddressValue(Json memory json, address value) internal pure returns (Json memory) {
-        bytes memory addr = bytes(addressToString(value));
+        string memory addr = addressToString(value);
         if (json.depthBitTracker < 0) {
             json.buffer = abi.encodePacked(json.buffer, COMMA, '"', addr, '"');
         } else {
@@ -325,7 +326,10 @@ library JsonWriter {
      *      Reverts if there are unclosed JSON objects/arrays.
      */
     function toString(Json memory json) internal pure returns (string memory) {
-        //require(getCurrentDepth(json) == 0, "JsonWriter: unbalanced JSON");
+        if (getCurrentDepth(json) != 0) {
+            revert UnbalancedJSON();
+        }
+
         return string(json.buffer);
     }
 
@@ -334,71 +338,62 @@ library JsonWriter {
      */
     function escapeJsonString(string memory value) private pure returns (string memory str) {
         bytes memory b = bytes(value);
-        bool foundEscapeChars;
-
-        for (uint256 i; i < b.length;) {
-            if (b[i] == BACKSLASH) {
-                foundEscapeChars = true;
-                break;
-            } else if (b[i] == DOUBLE_QUOTE) {
-                foundEscapeChars = true;
-                break;
-            } else if (b[i] == FORWARD_SLASH) {
-                foundEscapeChars = true;
-                break;
-            } else if (b[i] == HORIZONTAL_TAB) {
-                foundEscapeChars = true;
-                break;
-            } else if (b[i] == FORM_FEED) {
-                foundEscapeChars = true;
-                break;
-            } else if (b[i] == NEWLINE) {
-                foundEscapeChars = true;
-                break;
-            } else if (b[i] == CARRIAGE_RETURN) {
-                foundEscapeChars = true;
-                break;
-            } else if (b[i] == BACKSPACE) {
-                foundEscapeChars = true;
-                break;
+        uint256 extra;
+        for (uint256 i; i < b.length; ) {
+            bytes1 c = b[i];
+            if (
+                c == BACKSLASH ||
+                c == DOUBLE_QUOTE ||
+                c == HORIZONTAL_TAB ||
+                c == FORM_FEED ||
+                c == NEWLINE ||
+                c == CARRIAGE_RETURN ||
+                c == BACKSPACE
+            ) {
+                extra += 1; // e.g. `\n` is '\' + 'n' instead of single byte
             }
-
-            unchecked {
-                ++i;
-            }
+            unchecked { ++i; }
         }
 
-        if (!foundEscapeChars) {
+        if (extra == 0) {
             return value;
         }
 
-        for (uint256 i; i < b.length;) {
-            if (b[i] == BACKSLASH) {
-                str = string(abi.encodePacked(str, "\\\\"));
-            } else if (b[i] == DOUBLE_QUOTE) {
-                str = string(abi.encodePacked(str, '\\"'));
-            } else if (b[i] == FORWARD_SLASH) {
-                str = string(abi.encodePacked(str, "\\/"));
-            } else if (b[i] == HORIZONTAL_TAB) {
-                str = string(abi.encodePacked(str, "\\t"));
-            } else if (b[i] == FORM_FEED) {
-                str = string(abi.encodePacked(str, "\\f"));
-            } else if (b[i] == NEWLINE) {
-                str = string(abi.encodePacked(str, "\\n"));
-            } else if (b[i] == CARRIAGE_RETURN) {
-                str = string(abi.encodePacked(str, "\\r"));
-            } else if (b[i] == BACKSPACE) {
-                str = string(abi.encodePacked(str, "\\b"));
+        bytes memory out = new bytes(b.length + extra);
+        uint256 j;
+
+        for (uint256 i; i < b.length; ) {
+            bytes1 c = b[i];
+
+            if (c == BACKSLASH) {
+                out[j++] = "\\";
+                out[j++] = "\\";
+            } else if (c == DOUBLE_QUOTE) {
+                out[j++] = "\\";
+                out[j++] = '"';
+            } else if (c == HORIZONTAL_TAB) {
+                out[j++] = "\\";
+                out[j++] = "t";
+            } else if (c == FORM_FEED) {
+                out[j++] = "\\";
+                out[j++] = "f";
+            } else if (c == NEWLINE) {
+                out[j++] = "\\";
+                out[j++] = "n";
+            } else if (c == CARRIAGE_RETURN) {
+                out[j++] = "\\";
+                out[j++] = "r";
+            } else if (c == BACKSPACE) {
+                out[j++] = "\\";
+                out[j++] = "b";
             } else {
-                str = string(abi.encodePacked(str, b[i]));
+                out[j++] = c;
             }
 
-            unchecked {
-                ++i;
-            }
+            unchecked { ++i; }
         }
 
-        return str;
+        return string(out);
     }
 
     /**
@@ -456,7 +451,7 @@ library JsonWriter {
             }
         }
 
-        return string(abi.encodePacked(buffer));
+        return string(buffer);
     }
 
     /**
