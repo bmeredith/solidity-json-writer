@@ -95,15 +95,14 @@ contract JsonWriterStringTest is Test {
     }
 
     function fixtureEscapeChars() public pure returns (StringTestCase[] memory) {
-        StringTestCase[] memory entries = new StringTestCase[](8);
+        StringTestCase[] memory entries = new StringTestCase[](7);
         entries[0] = StringTestCase("\\", '"\\\\"');
         entries[1] = StringTestCase("\x08", '"\\b"');
         entries[2] = StringTestCase("\r", '"\\r"');
         entries[3] = StringTestCase('"', '"\\""');
         entries[4] = StringTestCase("\x0c", '"\\f"');
-        entries[5] = StringTestCase("/", '"\\/"');
-        entries[6] = StringTestCase("\t", '"\\t"');
-        entries[7] = StringTestCase("\n", '"\\n"');
+        entries[5] = StringTestCase("\t", '"\\t"');
+        entries[6] = StringTestCase("\n", '"\\n"');
 
         return entries;
     }

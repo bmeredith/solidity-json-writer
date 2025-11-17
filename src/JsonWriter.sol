@@ -30,6 +30,7 @@ library JsonWriter {
     bytes1 constant CLOSED_BRACKET = "]";
     bytes1 constant COMMA = ",";
 
+    uint8 constant ADDRESS_LENGTH = 20;
     int256 constant MAX_INT256 = type(int256).max;
     bytes16 constant HEX_DIGITS = "0123456789abcdef";
     bytes16 constant HEX_CAPITAL = "0123456789ABCDEF";
@@ -413,44 +414,41 @@ library JsonWriter {
         return json.depthBitTracker | (int256(1) << 255);
     }
 
+
     /**
-     * @dev Converts an address to a string.
+     * @dev Converts an address to a string. Based off of OZ's Strings.sol implementation.
      */
-    function addressToString(address _address) internal pure returns (string memory) {
-        bytes memory lowercase = new bytes(40);
-        uint160 currentAddressValue = uint160(_address);
+    function addressToString(address addr) internal pure returns (string memory) {
+        bytes memory buffer = bytes(toHexString(addr));
 
-        for (uint256 i; i < 40;) {
-            lowercase[39 - i] = HEX_DIGITS[currentAddressValue & 0xf];
-            currentAddressValue >>= 4;
-
-            unchecked {
-                ++i;
-            }
+        // hash the hex part of buffer (skip length + 2 bytes, length 40)
+        uint256 hashValue;
+        assembly ("memory-safe") {
+            hashValue := shr(96, keccak256(add(buffer, 0x22), 40))
         }
-        bytes32 hashedAddress = keccak256(abi.encodePacked(lowercase));
 
-        bytes memory buffer = new bytes(42);
+        for (uint256 i = 41; i > 1; --i) {
+            // possible values for buffer[i] are 48 (0) to 57 (9) and 97 (a) to 102 (f)
+            if (hashValue & 0xf > 7 && uint8(buffer[i]) > 96) {
+                // case shift by xoring with 0x20
+                buffer[i] ^= 0x20;
+            }
+            hashValue >>= 4;
+        }
+        return string(buffer);
+    }
+
+    function toHexString(address value) internal pure returns (string memory) {
+        uint256 localValue = uint256(uint160(value));
+
+        bytes memory buffer = new bytes(2 * ADDRESS_LENGTH + 2);
         buffer[0] = "0";
         buffer[1] = "x";
-
-        uint160 addressValue = uint160(_address);
-        uint160 hashValue = uint160(bytes20(hashedAddress));
-        for (uint256 i = 41; i > 1;) {
-            uint256 hashIndex = hashValue & 0xf;
-            if (hashIndex > 7) {
-                buffer[i] = HEX_CAPITAL[addressValue & 0xf];
-            } else {
-                buffer[i] = HEX_DIGITS[addressValue & 0xf];
-            }
-            addressValue >>= 4;
-            hashValue >>= 4;
-
-            unchecked {
-                --i;
-            }
+        for (uint256 i = 2 * ADDRESS_LENGTH + 1; i > 1; --i) {
+            buffer[i] = HEX_DIGITS[localValue & 0xf];
+            localValue >>= 4;
         }
-
+        
         return string(buffer);
     }
 
