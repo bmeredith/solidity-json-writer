@@ -14,6 +14,13 @@ library JsonWriter {
         bytes buffer;
     }
 
+    uint256 constant CTRL_CHARS_MASK =
+        (1 << uint8(BACKSPACE)) |       
+        (1 << uint8(HORIZONTAL_TAB)) |
+        (1 << uint8(NEWLINE)) |
+        (1 << uint8(FORM_FEED)) |
+        (1 << uint8(CARRIAGE_RETURN));
+
     bytes1 constant BACKSLASH = "\\";
     bytes1 constant BACKSPACE = "\x08";
     bytes1 constant CARRIAGE_RETURN = "\r";
@@ -335,24 +342,30 @@ library JsonWriter {
     }
 
     /**
-     * @dev Escapes any characters that required by JSON to be escaped.
+     * @dev Escapes characters that are required by JSON to be escaped.
+     * Escapes backslash and double quote: \" \\
+     * Escapes all ASCII control chars < 0x20:
+     *   For chars in CTRL_CHARS_MASK, use short escapes
+     *   For all others, use \u00XX
      */
     function escapeJsonString(string memory value) private pure returns (string memory str) {
         bytes memory b = bytes(value);
+        uint256 len = b.length;
         uint256 extra;
-        for (uint256 i; i < b.length; ) {
-            bytes1 c = b[i];
-            if (
-                c == BACKSLASH ||
-                c == DOUBLE_QUOTE ||
-                c == HORIZONTAL_TAB ||
-                c == FORM_FEED ||
-                c == NEWLINE ||
-                c == CARRIAGE_RETURN ||
-                c == BACKSPACE
-            ) {
-                extra += 1; // e.g. `\n` is '\' + 'n' instead of single byte
+
+        // determine how many extra bytes are needed
+        for (uint256 i; i < len;) {
+            bytes1 char = b[i];
+            uint8 code = uint8(char);
+
+            if (char == BACKSLASH || char == DOUBLE_QUOTE) {
+                extra += 1;
+            } else if (code < 0x20) {
+                // use short escape (1 extra byte), otherwise use \u00xx (5 extra bytes)
+                bool hasShortEscape = (CTRL_CHARS_MASK & (1 << code)) != 0;
+                extra += hasShortEscape ? 1 : 5;
             }
+
             unchecked { ++i; }
         }
 
@@ -360,35 +373,46 @@ library JsonWriter {
             return value;
         }
 
-        bytes memory out = new bytes(b.length + extra);
+        bytes memory out = new bytes(len + extra);
         uint256 j;
 
-        for (uint256 i; i < b.length; ) {
-            bytes1 c = b[i];
+        for (uint256 i; i < len;) {
+            bytes1 char = b[i];
+            uint8 code = uint8(char);
 
-            if (c == BACKSLASH) {
+            if (char == BACKSLASH) {
                 out[j++] = "\\";
                 out[j++] = "\\";
-            } else if (c == DOUBLE_QUOTE) {
+            } else if (char == DOUBLE_QUOTE) {
                 out[j++] = "\\";
                 out[j++] = '"';
-            } else if (c == HORIZONTAL_TAB) {
+            } else if (code < 0x20) {
+                bool hasShortEscape = (CTRL_CHARS_MASK & (1 << code)) != 0;
                 out[j++] = "\\";
-                out[j++] = "t";
-            } else if (c == FORM_FEED) {
-                out[j++] = "\\";
-                out[j++] = "f";
-            } else if (c == NEWLINE) {
-                out[j++] = "\\";
-                out[j++] = "n";
-            } else if (c == CARRIAGE_RETURN) {
-                out[j++] = "\\";
-                out[j++] = "r";
-            } else if (c == BACKSPACE) {
-                out[j++] = "\\";
-                out[j++] = "b";
+                
+                if (hasShortEscape) {
+                    if (char == BACKSPACE) {
+                        out[j++] = "b";
+                    } else if (char == HORIZONTAL_TAB) {
+                        out[j++] = "t";
+                    } else if (char == NEWLINE) {
+                        out[j++] = "n";
+                    } else if (char == FORM_FEED) {
+                        out[j++] = "f";
+                    } else if (char == CARRIAGE_RETURN) {
+                        out[j++] = "r";
+                    }
+                } else {
+                    // set other control chars as \u00XX
+                    out[j++] = "u";
+                    out[j++] = "0";
+                    out[j++] = "0";
+                    out[j++] = HEX_DIGITS[code >> 4];
+                    out[j++] = HEX_DIGITS[code & 0x0f];
+                }
             } else {
-                out[j++] = c;
+                // normal char
+                out[j++] = char;
             }
 
             unchecked { ++i; }
@@ -413,7 +437,6 @@ library JsonWriter {
     function setListSeparatorFlag(Json memory json) private pure returns (int256) {
         return json.depthBitTracker | (int256(1) << 255);
     }
-
 
     /**
      * @dev Converts an address to a string. Based off of OZ's Strings.sol implementation.
