@@ -14,12 +14,12 @@ contract JsonWriterUintTest is Test {
 
     function fixtureValues() public pure returns (UintTestCase[] memory) {
         UintTestCase[] memory entries = new UintTestCase[](3);
-        entries[0] = UintTestCase(0, "0");
-        entries[1] = UintTestCase(1, "1");
-        entries[2] = UintTestCase(
-            115792089237316195423570985008687907853269984665640564039457584007913129639935,
-            "115792089237316195423570985008687907853269984665640564039457584007913129639935"
-        );
+        entries[0] = UintTestCase({ arg: 0, expected: "0" });
+        entries[1] = UintTestCase({ arg: 1, expected: "1" });
+        entries[2] = UintTestCase({
+            arg: 115792089237316195423570985008687907853269984665640564039457584007913129639935,
+            expected: "115792089237316195423570985008687907853269984665640564039457584007913129639935"
+        });
 
         return entries;
     }
@@ -58,12 +58,12 @@ contract JsonWriterUintTest is Test {
 
     function fixtureProperties() public pure returns (UintTestCase[] memory) {
         UintTestCase[] memory entries = new UintTestCase[](3);
-        entries[0] = UintTestCase(0, '"prop": 0');
-        entries[1] = UintTestCase(1, '"prop": 1');
-        entries[2] = UintTestCase(
-            115792089237316195423570985008687907853269984665640564039457584007913129639935,
-            '"prop": 115792089237316195423570985008687907853269984665640564039457584007913129639935'
-        );
+        entries[0] = UintTestCase({ arg: 0, expected: '"prop": 0'});
+        entries[1] = UintTestCase({ arg: 1, expected: '"prop": 1'});
+        entries[2] = UintTestCase({
+            arg: 115792089237316195423570985008687907853269984665640564039457584007913129639935,
+            expected: '"prop": 115792089237316195423570985008687907853269984665640564039457584007913129639935'
+        });
 
         return entries;
     }

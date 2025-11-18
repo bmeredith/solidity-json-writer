@@ -15,11 +15,11 @@ library JsonWriter {
     }
 
     uint256 constant CTRL_CHARS_MASK =
-        (1 << uint8(BACKSPACE)) |       
-        (1 << uint8(HORIZONTAL_TAB)) |
-        (1 << uint8(NEWLINE)) |
-        (1 << uint8(FORM_FEED)) |
-        (1 << uint8(CARRIAGE_RETURN));
+        (uint256(1) << uint8(BACKSPACE)) | 
+        (uint256(1) << uint8(HORIZONTAL_TAB)) | 
+        (uint256(1) << uint8(NEWLINE)) | 
+        (uint256(1) << uint8(FORM_FEED)) | 
+        (uint256(1) << uint8(CARRIAGE_RETURN));
 
     bytes1 constant BACKSLASH = "\\";
     bytes1 constant BACKSPACE = "\x08";
@@ -362,7 +362,7 @@ library JsonWriter {
                 extra += 1;
             } else if (code < 0x20) {
                 // use short escape (1 extra byte), otherwise use \u00xx (5 extra bytes)
-                bool hasShortEscape = (CTRL_CHARS_MASK & (1 << code)) != 0;
+                bool hasShortEscape = (CTRL_CHARS_MASK & (uint256(1) << code)) != 0;
                 extra += hasShortEscape ? 1 : 5;
             }
 
@@ -387,7 +387,7 @@ library JsonWriter {
                 out[j++] = "\\";
                 out[j++] = '"';
             } else if (code < 0x20) {
-                bool hasShortEscape = (CTRL_CHARS_MASK & (1 << code)) != 0;
+                bool hasShortEscape = (CTRL_CHARS_MASK & (uint256(1) << code)) != 0;
                 out[j++] = "\\";
                 
                 if (hasShortEscape) {
@@ -492,8 +492,14 @@ library JsonWriter {
         uint256 len;
         uint256 j;
         if (!negative) {
+            // casting positive int256 to uint256 is always safe
+            // forge-lint: disable-next-line(unsafe-typecast)
             j = uint256(i);
         } else {
+            // casting (-i) from int256 to uint256 is safe because:
+            // 1. int256.min is handled separately, so -i will never overflow.
+            // 2. for any other negative i, -i is in the range [1, 2^255 - 1], which fits safely in uint256.
+            // forge-lint: disable-next-line(unsafe-typecast)
             j = uint256(-i);
             ++len; // make room for '-' sign
         }
@@ -507,7 +513,10 @@ library JsonWriter {
         bytes memory bstr = new bytes(len);
         uint256 k = len;
         while (l != 0) {
-            bstr[--k] = bytes1((48 + uint8(l - (l / 10) * 10)));
+            uint256 digit = l % 10;
+            // casting to uint8 is safe because (48 + digit) is always in the ASCII range 48–57 (<256)
+            // forge-lint: disable-next-line(unsafe-typecast)
+            bstr[--k] = bytes1(uint8(48 + digit));
             l /= 10;
         }
 
@@ -536,7 +545,10 @@ library JsonWriter {
         bytes memory bstr = new bytes(len);
         uint256 k = len;
         while (_i != 0) {
-            bstr[--k] = bytes1((48 + uint8(_i - (_i / 10) * 10)));
+            uint256 digit = _i % 10;
+            // casting to uint8 is safe because (48 + digit) is always in the ASCII range 48–57 (<256)
+            // forge-lint: disable-next-line(unsafe-typecast)
+            bstr[--k] = bytes1(uint8(48 + digit));
             _i /= 10;
         }
 

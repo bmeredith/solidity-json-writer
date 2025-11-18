@@ -14,17 +14,17 @@ contract JsonWriterIntTest is Test {
 
     function fixtureValues() public pure returns (IntTestCase[] memory) {
         IntTestCase[] memory entries = new IntTestCase[](5);
-        entries[0] = IntTestCase(-1, "-1");
-        entries[1] = IntTestCase(0, "0");
-        entries[2] = IntTestCase(1, "1");
-        entries[3] = IntTestCase(
-            -57896044618658097711785492504343953926634992332820282019728792003956564819968,
-            "-57896044618658097711785492504343953926634992332820282019728792003956564819968"
-        );
-        entries[4] = IntTestCase(
-            57896044618658097711785492504343953926634992332820282019728792003956564819967,
-            "57896044618658097711785492504343953926634992332820282019728792003956564819967"
-        );
+        entries[0] = IntTestCase({ arg: -1, expected: "-1" });
+        entries[1] = IntTestCase({ arg: 0, expected: "0" });
+        entries[2] = IntTestCase({ arg: 1, expected: "1" });
+        entries[3] = IntTestCase({
+            arg: -57896044618658097711785492504343953926634992332820282019728792003956564819968,
+            expected: "-57896044618658097711785492504343953926634992332820282019728792003956564819968"
+        });
+        entries[4] = IntTestCase({
+            arg: 57896044618658097711785492504343953926634992332820282019728792003956564819967,
+            expected: "57896044618658097711785492504343953926634992332820282019728792003956564819967"
+        });
 
         return entries;
     }
@@ -63,17 +63,17 @@ contract JsonWriterIntTest is Test {
 
     function fixtureProperties() public pure returns (IntTestCase[] memory) {
         IntTestCase[] memory entries = new IntTestCase[](5);
-        entries[0] = IntTestCase(-1, '"prop": -1');
-        entries[1] = IntTestCase(0, '"prop": 0');
-        entries[2] = IntTestCase(1, '"prop": 1');
-        entries[3] = IntTestCase(
-            -57896044618658097711785492504343953926634992332820282019728792003956564819968,
-            '"prop": -57896044618658097711785492504343953926634992332820282019728792003956564819968'
-        );
-        entries[4] = IntTestCase(
-            57896044618658097711785492504343953926634992332820282019728792003956564819967,
-            '"prop": 57896044618658097711785492504343953926634992332820282019728792003956564819967'
-        );
+        entries[0] = IntTestCase({ arg: -1, expected: '"prop": -1' });
+        entries[1] = IntTestCase({ arg: 0, expected: '"prop": 0' });
+        entries[2] = IntTestCase({ arg: 1, expected: '"prop": 1' });
+        entries[3] = IntTestCase({
+            arg: -57896044618658097711785492504343953926634992332820282019728792003956564819968,
+            expected: '"prop": -57896044618658097711785492504343953926634992332820282019728792003956564819968'
+        });
+        entries[4] = IntTestCase({
+            arg: 57896044618658097711785492504343953926634992332820282019728792003956564819967,
+            expected: '"prop": 57896044618658097711785492504343953926634992332820282019728792003956564819967'
+        });
 
         return entries;
     }

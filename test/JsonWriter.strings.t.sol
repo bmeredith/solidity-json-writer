@@ -14,9 +14,9 @@ contract JsonWriterStringTest is Test {
 
     function fixtureValues() public pure returns (StringTestCase[] memory) {
         StringTestCase[] memory entries = new StringTestCase[](3);
-        entries[0] = StringTestCase("", '""');
-        entries[1] = StringTestCase("test", '"test"');
-        entries[2] = StringTestCase("1234", '"1234"');
+        entries[0] = StringTestCase({ arg: "", expected: '""' });
+        entries[1] = StringTestCase({ arg: "test", expected: '"test"' });
+        entries[2] = StringTestCase({ arg: "1234", expected: '"1234"' });
 
         return entries;
     }
@@ -55,9 +55,9 @@ contract JsonWriterStringTest is Test {
 
     function fixtureProperties() public pure returns (StringTestCase[] memory) {
         StringTestCase[] memory entries = new StringTestCase[](3);
-        entries[0] = StringTestCase("", '"prop": ""');
-        entries[1] = StringTestCase("test", '"prop": "test"');
-        entries[2] = StringTestCase("1234", '"prop": "1234"');
+        entries[0] = StringTestCase({ arg: "", expected: '"prop": ""' });
+        entries[1] = StringTestCase({ arg: "test", expected: '"prop": "test"' });
+        entries[2] = StringTestCase({ arg: "1234", expected: '"prop": "1234"' });
 
         return entries;
     }
@@ -96,17 +96,17 @@ contract JsonWriterStringTest is Test {
 
     function fixtureEscapeChars() public pure returns (StringTestCase[] memory) {
         StringTestCase[] memory entries = new StringTestCase[](13);
-        entries[0] = StringTestCase("\\", '"\\\\"');
-        entries[1] = StringTestCase("\x08", '"\\b"');
-        entries[2] = StringTestCase("\r", '"\\r"');
-        entries[3] = StringTestCase('"', '"\\""');
-        entries[4] = StringTestCase("\x0c", '"\\f"');
-        entries[5] = StringTestCase("\t", '"\\t"');
-        entries[6] = StringTestCase("\n", '"\\n"');
-        entries[7] = StringTestCase("\x00", '"\\u0000"');
-        entries[8] = StringTestCase("\x0b", '"\\u000b"');
-        entries[9] = StringTestCase("\x1f", '"\\u001f"');
-        entries[10] = StringTestCase("", '""');
+        entries[0] = StringTestCase({ arg: "\\", expected: '"\\\\"' });
+        entries[1] = StringTestCase({ arg: "\x08", expected: '"\\b"' });
+        entries[2] = StringTestCase({ arg: "\r", expected: '"\\r"' });
+        entries[3] = StringTestCase({ arg: '"', expected: '"\\""' });
+        entries[4] = StringTestCase({ arg: "\x0c", expected: '"\\f"' });
+        entries[5] = StringTestCase({ arg: "\t", expected: '"\\t"' });
+        entries[6] = StringTestCase({ arg: "\n", expected: '"\\n"' });
+        entries[7] = StringTestCase({ arg: "\x00", expected: '"\\u0000"' });
+        entries[8] = StringTestCase({ arg: "\x0b", expected: '"\\u000b"' });
+        entries[9] = StringTestCase({ arg: "\x1f", expected: '"\\u001f"' });
+        entries[10] = StringTestCase({ arg: "", expected: '""' });
         entries[11] = StringTestCase({
             arg: string(abi.encodePacked("a", "\n", "b", "\"", "c", "\x01", "d")),
             expected: '"a\\nb\\\"c\\u0001d"'

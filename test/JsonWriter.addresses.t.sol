@@ -14,16 +14,26 @@ contract JsonWriterAddressTest is Test {
 
     function fixtureValues() public pure returns (AddressTestCase[] memory) {
         AddressTestCase[] memory entries = new AddressTestCase[](5);
-        entries[0] =
-            AddressTestCase(0x0000000000000000000000000000000000000000, '"0x0000000000000000000000000000000000000000"');
-        entries[1] =
-            AddressTestCase(0x1111111111111111111111111111111111111111, '"0x1111111111111111111111111111111111111111"');
-        entries[2] =
-            AddressTestCase(0x6B175474E89094C44Da98b954EedeAC495271d0F, '"0x6B175474E89094C44Da98b954EedeAC495271d0F"');
-        entries[3] =
-            AddressTestCase(0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF, '"0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF"');
-        entries[4] =
-            AddressTestCase(0x000000000000000000000000000000000000dEaD, '"0x000000000000000000000000000000000000dEaD"');
+        entries[0] = AddressTestCase({
+            arg: 0x0000000000000000000000000000000000000000, 
+            expected: '"0x0000000000000000000000000000000000000000"'
+        });
+        entries[1] = AddressTestCase({
+            arg: 0x1111111111111111111111111111111111111111, 
+            expected: '"0x1111111111111111111111111111111111111111"'
+        });
+        entries[2] = AddressTestCase({
+            arg: 0x6B175474E89094C44Da98b954EedeAC495271d0F, 
+            expected: '"0x6B175474E89094C44Da98b954EedeAC495271d0F"'
+        });
+        entries[3] = AddressTestCase({
+            arg: 0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF, 
+            expected: '"0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF"'
+        });
+        entries[4] = AddressTestCase({
+            arg: 0x000000000000000000000000000000000000dEaD, 
+            expected: '"0x000000000000000000000000000000000000dEaD"'
+        });
 
         return entries;
     }
@@ -64,21 +74,26 @@ contract JsonWriterAddressTest is Test {
 
     function fixtureProperties() public pure returns (AddressTestCase[] memory) {
         AddressTestCase[] memory entries = new AddressTestCase[](5);
-        entries[0] = AddressTestCase(
-            0x0000000000000000000000000000000000000000, '"prop": "0x0000000000000000000000000000000000000000"'
-        );
-        entries[1] = AddressTestCase(
-            0x1111111111111111111111111111111111111111, '"prop": "0x1111111111111111111111111111111111111111"'
-        );
-        entries[2] = AddressTestCase(
-            0x6B175474E89094C44Da98b954EedeAC495271d0F, '"prop": "0x6B175474E89094C44Da98b954EedeAC495271d0F"'
-        );
-        entries[3] = AddressTestCase(
-            0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF, '"prop": "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF"'
-        );
-        entries[4] = AddressTestCase(
-            0x000000000000000000000000000000000000dEaD, '"prop": "0x000000000000000000000000000000000000dEaD"'
-        );
+        entries[0] = AddressTestCase({
+            arg: 0x0000000000000000000000000000000000000000, 
+            expected: '"prop": "0x0000000000000000000000000000000000000000"'
+        });
+        entries[1] = AddressTestCase({
+            arg: 0x1111111111111111111111111111111111111111, 
+            expected: '"prop": "0x1111111111111111111111111111111111111111"'
+        });
+        entries[2] = AddressTestCase({
+            arg: 0x6B175474E89094C44Da98b954EedeAC495271d0F, 
+            expected: '"prop": "0x6B175474E89094C44Da98b954EedeAC495271d0F"'
+        });
+        entries[3] = AddressTestCase({
+            arg: 0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF, 
+            expected: '"prop": "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF"'
+        });
+        entries[4] = AddressTestCase({
+            arg: 0x000000000000000000000000000000000000dEaD, 
+            expected: '"prop": "0x000000000000000000000000000000000000dEaD"'
+        });
 
         return entries;
     }
