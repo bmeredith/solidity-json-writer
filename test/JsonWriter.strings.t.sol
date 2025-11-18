@@ -95,7 +95,7 @@ contract JsonWriterStringTest is Test {
     }
 
     function fixtureEscapeChars() public pure returns (StringTestCase[] memory) {
-        StringTestCase[] memory entries = new StringTestCase[](7);
+        StringTestCase[] memory entries = new StringTestCase[](13);
         entries[0] = StringTestCase("\\", '"\\\\"');
         entries[1] = StringTestCase("\x08", '"\\b"');
         entries[2] = StringTestCase("\r", '"\\r"');
@@ -103,6 +103,18 @@ contract JsonWriterStringTest is Test {
         entries[4] = StringTestCase("\x0c", '"\\f"');
         entries[5] = StringTestCase("\t", '"\\t"');
         entries[6] = StringTestCase("\n", '"\\n"');
+        entries[7] = StringTestCase("\x00", '"\\u0000"');
+        entries[8] = StringTestCase("\x0b", '"\\u000b"');
+        entries[9] = StringTestCase("\x1f", '"\\u001f"');
+        entries[10] = StringTestCase("", '""');
+        entries[11] = StringTestCase({
+            arg: string(abi.encodePacked("a", "\n", "b", "\"", "c", "\x01", "d")),
+            expected: '"a\\nb\\\"c\\u0001d"'
+        });
+        entries[12] = StringTestCase({
+            arg: "Hello, world! 123 _-+=/",
+            expected: '"Hello, world! 123 _-+=/"'
+        });
 
         return entries;
     }
@@ -114,5 +126,22 @@ contract JsonWriterStringTest is Test {
             .toString();
 
         assertEq(output, escapeChars.expected);
+    }
+
+    function test_escapeAllControlChars() public pure { 
+        bytes memory raw = new bytes(0x20);
+        for (uint8 i=0; i < 0x20; i++) {
+            raw[i] = bytes1(i);
+        }
+
+        JsonWriter.Json memory json;
+        string memory output = json
+            .writeStringValue(string(raw))
+            .toString();
+        bytes memory b = bytes(output);
+
+        for (uint256 i=0; i < b.length; i++) {
+            assertTrue(uint8(b[i]) >= 0x20, "Unescaped control char present");
+        }
     }
 }
