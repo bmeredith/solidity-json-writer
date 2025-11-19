@@ -1,0 +1,15 @@
+{
+  "name": "solidity-json-writer",
+  "version": "2.0.0",
+  "author": "bmeredith",
+  "license": "MIT",
+  "files": ["src"],
+  "scripts": {
+    "build": "forge build",
+    "test": "forge test -vvv"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bmeredith/solidity-json-writer.git"
+  }
+}

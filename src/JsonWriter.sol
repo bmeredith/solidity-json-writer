@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 /**
- * @title JsonWriter
+ * @title JsonWriter 2.0.0
  * @author Ben Meredith (@bmeredith)
  * @dev A library to generate RFC-7159 compliant JSON from within a smart contract.
  */
@@ -425,24 +425,7 @@ library JsonWriter {
     }
 
     /**
-     * @dev Tracks the recursive depth of the nested objects / arrays within the JSON text
-     * written so far. This provides the depth of the current token.
-     */
-    function getCurrentDepth(Json memory json) private pure returns (int256) {
-        return json.depthBitTracker & MAX_INT256;
-    }
-
-    /**
-     * @dev The highest order bit of json.depthBitTracker is used to discern whether we are writing the first item in a list or not.
-     * if (json.depthBitTracker >> 255) == 1, add a list separator before writing the item
-     * else, no list separator is needed since we are writing the first item.
-     */
-    function setListSeparatorFlag(Json memory json) private pure returns (int256) {
-        return json.depthBitTracker | (int256(1) << 255);
-    }
-
-    /**
-     * @dev Converts an address to a string. Based off of OZ's Strings.sol implementation.
+     * @dev Converts an address to a checksummed string. Based off of OZ's Strings.sol implementation.
      */
     function addressToString(address addr) internal pure returns (string memory) {
         bytes memory buffer = bytes(toHexString(addr));
@@ -464,6 +447,9 @@ library JsonWriter {
         return string(buffer);
     }
 
+    /**
+     * @dev Converts a `bytes` buffer to its non-checksummed ASCII `string` hexadecimal representation.
+     */
     function toHexString(address value) internal pure returns (string memory) {
         uint256 localValue = uint256(uint160(value));
 
@@ -556,5 +542,22 @@ library JsonWriter {
         }
 
         return string(bstr);
+    }
+
+    /**
+     * @dev Tracks the recursive depth of the nested objects / arrays within the JSON text
+     * written so far. This provides the depth of the current token.
+     */
+    function getCurrentDepth(Json memory json) private pure returns (int256) {
+        return json.depthBitTracker & MAX_INT256;
+    }
+
+    /**
+     * @dev The highest order bit of json.depthBitTracker is used to discern whether we are writing the first item in a list or not.
+     * if (json.depthBitTracker >> 255) == 1, add a list separator before writing the item
+     * else, no list separator is needed since we are writing the first item.
+     */
+    function setListSeparatorFlag(Json memory json) private pure returns (int256) {
+        return json.depthBitTracker | (int256(1) << 255);
     }
 }
