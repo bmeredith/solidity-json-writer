@@ -28,4 +28,21 @@ contract JsonWriterObjectTest is Test {
 
         assertEq(output, '{"prop": []}');
     }
+
+    /// forge-config: default.allow_internal_expect_revert = true
+    function test_revertOnExtraOpenBrace() public {
+        JsonWriter.Json memory json;
+        json = json.writeStartObject();
+
+        vm.expectRevert(JsonWriter.UnbalancedJSON.selector);
+        json.toString();
+    }
+
+    /// forge-config: default.allow_internal_expect_revert = true
+    function test_revertOnExtraClosedBrace() public {
+        JsonWriter.Json memory json;
+
+        vm.expectRevert(JsonWriter.UnbalancedJSON.selector);
+        json.writeEndObject();
+    }
 }

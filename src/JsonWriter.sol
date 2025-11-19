@@ -319,12 +319,15 @@ library JsonWriter {
      * @dev Writes the end of a JSON array or object based on the token parameter.
      */
     function writeEnd(Json memory json, bytes1 token) private pure returns (Json memory) {
-        json.buffer = abi.encodePacked(json.buffer, token);
-        json.depthBitTracker = setListSeparatorFlag(json);
-
-        if (getCurrentDepth(json) != 0) {
-            json.depthBitTracker--;
+        int256 depth = getCurrentDepth(json);
+        if (depth == 0) {
+            revert UnbalancedJSON();
         }
+
+        json.buffer = abi.encodePacked(json.buffer, token);
+        
+        unchecked { depth -= 1; }
+        json.depthBitTracker = depth | (int256(1) << 255);
 
         return json;
     }
