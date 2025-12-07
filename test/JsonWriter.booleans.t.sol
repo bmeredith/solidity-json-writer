@@ -54,7 +54,7 @@ contract JsonWriterBooleanTest is Test {
             .writeBooleanProperty("prop", true)
             .toString();
 
-        assertEq(output, '"prop": true');
+        assertEq(output, '"prop":true');
     }
 
     function test_writesBooleanPropertyOfFalse() public pure {
@@ -63,7 +63,7 @@ contract JsonWriterBooleanTest is Test {
             .writeBooleanProperty("prop", false)
             .toString();
 
-        assertEq(output, '"prop": false');
+        assertEq(output, '"prop":false');
     }
 
     function test_writesObjectWithSingleBooleanPropertyAndValue() public pure {
@@ -74,7 +74,7 @@ contract JsonWriterBooleanTest is Test {
             .writeEndObject()
             .toString();
 
-        assertEq(output, '{"prop": true}');
+        assertEq(output, '{"prop":true}');
     }
 
     function test_writesObjectyWithMultipleBooleanPropertiesAndValues() public pure {
@@ -86,6 +86,6 @@ contract JsonWriterBooleanTest is Test {
             .writeEndObject()
             .toString();
 
-        assertEq(output, '{"prop1": true,"prop2": true}');
+        assertEq(output, '{"prop1":true,"prop2":true}');
     }
 }

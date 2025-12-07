@@ -45,7 +45,7 @@ contract JsonWriterNullTest is Test {
             .writeNullProperty("prop")
             .toString();
 
-        assertEq(output, '"prop": null');
+        assertEq(output, '"prop":null');
     }
 
     function test_writesObjectWithSinglePropertyAndNullValue() public pure {
@@ -56,7 +56,7 @@ contract JsonWriterNullTest is Test {
             .writeEndObject()
             .toString();
 
-        assertEq(output, '{"prop": null}');
+        assertEq(output, '{"prop":null}');
     }
 
     function test_writesObjectWithMultiplePropertiesAndNullValues() public pure {
@@ -68,6 +68,6 @@ contract JsonWriterNullTest is Test {
             .writeEndObject()
             .toString();
 
-        assertEq(output, '{"prop1": null,"prop2": null}');
+        assertEq(output, '{"prop1":null,"prop2":null}');
     }
 }

@@ -94,9 +94,9 @@ library JsonWriter {
     {
         string memory addr = addressToString(value);
         if (json.depthBitTracker < 0) {
-            json.buffer = abi.encodePacked(json.buffer, COMMA, '"', propertyName, '": "', addr, '"');
+            json.buffer = abi.encodePacked(json.buffer, COMMA, '"', propertyName, '":"', addr, '"');
         } else {
-            json.buffer = abi.encodePacked(json.buffer, '"', propertyName, '": "', addr, '"');
+            json.buffer = abi.encodePacked(json.buffer, '"', propertyName, '":"', addr, '"');
         }
 
         json.depthBitTracker = setListSeparatorFlag(json);
@@ -128,9 +128,9 @@ library JsonWriter {
     {
         string memory strValue = value ? TRUE : FALSE;
         if (json.depthBitTracker < 0) {
-            json.buffer = abi.encodePacked(json.buffer, COMMA, '"', propertyName, '": ', strValue);
+            json.buffer = abi.encodePacked(json.buffer, COMMA, '"', propertyName, '":', strValue);
         } else {
-            json.buffer = abi.encodePacked(json.buffer, '"', propertyName, '": ', strValue);
+            json.buffer = abi.encodePacked(json.buffer, '"', propertyName, '":', strValue);
         }
 
         json.depthBitTracker = setListSeparatorFlag(json);
@@ -163,9 +163,9 @@ library JsonWriter {
         string memory strValue = intToString(value);
         if (json.depthBitTracker < 0) {
             json.buffer =
-                abi.encodePacked(json.buffer, COMMA, '"', propertyName, '": ', strValue);
+                abi.encodePacked(json.buffer, COMMA, '"', propertyName, '":', strValue);
         } else {
-            json.buffer = abi.encodePacked(json.buffer, '"', propertyName, '": ', strValue);
+            json.buffer = abi.encodePacked(json.buffer, '"', propertyName, '":', strValue);
         }
 
         json.depthBitTracker = setListSeparatorFlag(json);
@@ -192,9 +192,9 @@ library JsonWriter {
      */
     function writeNullProperty(Json memory json, string memory propertyName) internal pure returns (Json memory) {
         if (json.depthBitTracker < 0) {
-            json.buffer = abi.encodePacked(json.buffer, COMMA, '"', propertyName, '": null');
+            json.buffer = abi.encodePacked(json.buffer, COMMA, '"', propertyName, '":null');
         } else {
-            json.buffer = abi.encodePacked(json.buffer, '"', propertyName, '": null');
+            json.buffer = abi.encodePacked(json.buffer, '"', propertyName, '":null');
         }
 
         json.depthBitTracker = setListSeparatorFlag(json);
@@ -225,9 +225,9 @@ library JsonWriter {
     {
         string memory jsonEscapedString = escapeJsonString(value);
         if (json.depthBitTracker < 0) {
-            json.buffer = abi.encodePacked(json.buffer, COMMA, '"', propertyName, '": "', jsonEscapedString, '"');
+            json.buffer = abi.encodePacked(json.buffer, COMMA, '"', propertyName, '":"', jsonEscapedString, '"');
         } else {
-            json.buffer = abi.encodePacked(json.buffer, '"', propertyName, '": "', jsonEscapedString, '"');
+            json.buffer = abi.encodePacked(json.buffer, '"', propertyName, '":"', jsonEscapedString, '"');
         }
 
         json.depthBitTracker = setListSeparatorFlag(json);
@@ -259,9 +259,9 @@ library JsonWriter {
     {
         string memory strValue = uintToString(value);
         if (json.depthBitTracker < 0) {
-            json.buffer = abi.encodePacked(json.buffer, COMMA, '"', propertyName, '": ', strValue);
+            json.buffer = abi.encodePacked(json.buffer, COMMA, '"', propertyName, '":', strValue);
         } else {
-            json.buffer = abi.encodePacked(json.buffer, '"', propertyName, '": ', strValue);
+            json.buffer = abi.encodePacked(json.buffer, '"', propertyName, '":', strValue);
         }
 
         json.depthBitTracker = setListSeparatorFlag(json);
@@ -304,9 +304,9 @@ library JsonWriter {
      */
     function writeStart(Json memory json, string memory propertyName, bytes1 token) private pure returns (Json memory) {
         if (json.depthBitTracker < 0) {
-            json.buffer = abi.encodePacked(json.buffer, COMMA, '"', propertyName, '": ', token);
+            json.buffer = abi.encodePacked(json.buffer, COMMA, '"', propertyName, '":', token);
         } else {
-            json.buffer = abi.encodePacked(json.buffer, '"', propertyName, '": ', token);
+            json.buffer = abi.encodePacked(json.buffer, '"', propertyName, '":', token);
         }
 
         json.depthBitTracker &= MAX_INT256;

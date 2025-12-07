@@ -63,16 +63,16 @@ contract JsonWriterIntTest is Test {
 
     function fixtureProperties() public pure returns (IntTestCase[] memory) {
         IntTestCase[] memory entries = new IntTestCase[](5);
-        entries[0] = IntTestCase({ arg: -1, expected: '"prop": -1' });
-        entries[1] = IntTestCase({ arg: 0, expected: '"prop": 0' });
-        entries[2] = IntTestCase({ arg: 1, expected: '"prop": 1' });
+        entries[0] = IntTestCase({ arg: -1, expected: '"prop":-1' });
+        entries[1] = IntTestCase({ arg: 0, expected: '"prop":0' });
+        entries[2] = IntTestCase({ arg: 1, expected: '"prop":1' });
         entries[3] = IntTestCase({
             arg: -57896044618658097711785492504343953926634992332820282019728792003956564819968,
-            expected: '"prop": -57896044618658097711785492504343953926634992332820282019728792003956564819968'
+            expected: '"prop":-57896044618658097711785492504343953926634992332820282019728792003956564819968'
         });
         entries[4] = IntTestCase({
             arg: 57896044618658097711785492504343953926634992332820282019728792003956564819967,
-            expected: '"prop": 57896044618658097711785492504343953926634992332820282019728792003956564819967'
+            expected: '"prop":57896044618658097711785492504343953926634992332820282019728792003956564819967'
         });
 
         return entries;
@@ -95,7 +95,7 @@ contract JsonWriterIntTest is Test {
             .writeEndObject()
             .toString();
 
-        assertEq(output, '{"prop": -1}');
+        assertEq(output, '{"prop":-1}');
     }
 
     function test_writesObjectWithMultipleIntPropertiesAndValues() public pure {
@@ -107,6 +107,6 @@ contract JsonWriterIntTest is Test {
             .writeEndObject()
             .toString();
 
-        assertEq(output, '{"prop1": -1,"prop2": 1}');
+        assertEq(output, '{"prop1":-1,"prop2":1}');
     }
 }

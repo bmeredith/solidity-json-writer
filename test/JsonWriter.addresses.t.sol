@@ -38,7 +38,7 @@ contract JsonWriterAddressTest is Test {
         return entries;
     }
 
-    function table_writesAddressValueOf(AddressTestCase memory values) public pure {
+    function table_writesAddressValueOf(AddressTestCase memory values) public {
         JsonWriter.Json memory json;
         string memory output = json
             .writeAddressValue(values.arg)
@@ -47,7 +47,7 @@ contract JsonWriterAddressTest is Test {
         assertEq(output, values.expected);
     }
 
-    function test_writesArrayWithSingleAddressValue() public pure {
+    function test_writesArrayWithSingleAddressValue() public {
         JsonWriter.Json memory json;
         string memory output = json
             .writeStartArray()
@@ -58,7 +58,7 @@ contract JsonWriterAddressTest is Test {
         assertEq(output, '["0x1111111111111111111111111111111111111111"]');
     }
 
-    function test_writesArrayWithMultipleAddressValues() public pure {
+    function test_writesArrayWithMultipleAddressValues() public {
         JsonWriter.Json memory json;
         string memory output = json
             .writeStartArray()
@@ -76,29 +76,29 @@ contract JsonWriterAddressTest is Test {
         AddressTestCase[] memory entries = new AddressTestCase[](5);
         entries[0] = AddressTestCase({
             arg: 0x0000000000000000000000000000000000000000, 
-            expected: '"prop": "0x0000000000000000000000000000000000000000"'
+            expected: '"prop":"0x0000000000000000000000000000000000000000"'
         });
         entries[1] = AddressTestCase({
             arg: 0x1111111111111111111111111111111111111111, 
-            expected: '"prop": "0x1111111111111111111111111111111111111111"'
+            expected: '"prop":"0x1111111111111111111111111111111111111111"'
         });
         entries[2] = AddressTestCase({
             arg: 0x6B175474E89094C44Da98b954EedeAC495271d0F, 
-            expected: '"prop": "0x6B175474E89094C44Da98b954EedeAC495271d0F"'
+            expected: '"prop":"0x6B175474E89094C44Da98b954EedeAC495271d0F"'
         });
         entries[3] = AddressTestCase({
             arg: 0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF, 
-            expected: '"prop": "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF"'
+            expected: '"prop":"0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF"'
         });
         entries[4] = AddressTestCase({
             arg: 0x000000000000000000000000000000000000dEaD, 
-            expected: '"prop": "0x000000000000000000000000000000000000dEaD"'
+            expected: '"prop":"0x000000000000000000000000000000000000dEaD"'
         });
 
         return entries;
     }
 
-    function table_writesAddressPropertyOf(AddressTestCase memory properties) public pure {
+    function table_writesAddressPropertyOf(AddressTestCase memory properties) public {
         JsonWriter.Json memory json;
         string memory output = json
             .writeAddressProperty("prop", properties.arg)
@@ -107,7 +107,7 @@ contract JsonWriterAddressTest is Test {
         assertEq(output, properties.expected);
     }
 
-    function test_writesObjectWithSingleAddressPropertyAndValue() public pure {
+    function test_writesObjectWithSingleAddressPropertyAndValue() public {
         JsonWriter.Json memory json;
         string memory output = json
             .writeStartObject()
@@ -115,10 +115,10 @@ contract JsonWriterAddressTest is Test {
             .writeEndObject()
             .toString();
 
-        assertEq(output, '{"prop": "0x1111111111111111111111111111111111111111"}');
+        assertEq(output, '{"prop":"0x1111111111111111111111111111111111111111"}');
     }
 
-    function test_writesObjectWithMultipleAddressPropertiesAndValues() public pure {
+    function test_writesObjectWithMultipleAddressPropertiesAndValues() public {
         JsonWriter.Json memory json;
         string memory output = json
             .writeStartObject()
@@ -129,7 +129,7 @@ contract JsonWriterAddressTest is Test {
 
         assertEq(
             output,
-            '{"prop1": "0x1111111111111111111111111111111111111111","prop2": "0x2222222222222222222222222222222222222222"}'
+            '{"prop1":"0x1111111111111111111111111111111111111111","prop2":"0x2222222222222222222222222222222222222222"}'
         );
     }
 }

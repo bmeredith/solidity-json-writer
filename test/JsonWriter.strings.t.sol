@@ -55,9 +55,9 @@ contract JsonWriterStringTest is Test {
 
     function fixtureProperties() public pure returns (StringTestCase[] memory) {
         StringTestCase[] memory entries = new StringTestCase[](3);
-        entries[0] = StringTestCase({ arg: "", expected: '"prop": ""' });
-        entries[1] = StringTestCase({ arg: "test", expected: '"prop": "test"' });
-        entries[2] = StringTestCase({ arg: "1234", expected: '"prop": "1234"' });
+        entries[0] = StringTestCase({ arg: "", expected: '"prop":""' });
+        entries[1] = StringTestCase({ arg: "test", expected: '"prop":"test"' });
+        entries[2] = StringTestCase({ arg: "1234", expected: '"prop":"1234"' });
 
         return entries;
     }
@@ -79,7 +79,7 @@ contract JsonWriterStringTest is Test {
             .writeEndObject()
             .toString();
 
-        assertEq(output, '{"prop": "value"}');
+        assertEq(output, '{"prop":"value"}');
     }
 
     function test_writesObjectWithMultipleStringPropertiesAndValues() public pure {
@@ -91,7 +91,7 @@ contract JsonWriterStringTest is Test {
             .writeEndObject()
             .toString();
 
-        assertEq(output, '{"prop1": "value1","prop2": "value2"}');
+        assertEq(output, '{"prop1":"value1","prop2":"value2"}');
     }
 
     function fixtureEscapeChars() public pure returns (StringTestCase[] memory) {
